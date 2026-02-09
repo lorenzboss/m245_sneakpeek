@@ -5,13 +5,7 @@ import Home from './inner';
 
 export default async function ServerPage() {
   const { accessToken } = await withAuth();
-  const preloaded = await preloadQuery(
-    api.myFunctions.listNumbers,
-    {
-      count: 3,
-    },
-    { token: accessToken },
-  );
+  const preloaded = await preloadQuery(api.sneakers.listSneakers, {}, { token: accessToken });
 
   const data = preloadedQueryResult(preloaded);
 
