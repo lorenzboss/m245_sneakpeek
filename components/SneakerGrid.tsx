@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery } from 'convex/react';
+import Image from 'next/image';
 import { api } from '../convex/_generated/api';
 
 export function SneakerGrid() {
@@ -8,7 +9,7 @@ export function SneakerGrid() {
 
   if (!sneakers) {
     return (
-      <div className="flex justify-center items-center min-h-[400px]">
+      <div className="flex justify-center items-center min-h-100">
         <div className="text-lg text-slate-600">Loading...</div>
       </div>
     );
@@ -16,10 +17,10 @@ export function SneakerGrid() {
 
   if (sneakers.length === 0) {
     return (
-      <div className="flex justify-center items-center min-h-[400px]">
+      <div className="flex justify-center items-center min-h-100">
         <div className="text-center">
           <p className="text-lg text-slate-600">No sneakers yet</p>
-          <p className="text-sm text-slate-500 mt-2">Click "Add" to upload your first sneaker</p>
+          <p className="text-sm text-slate-500 mt-2">Be the first to create a sneaker!</p>
         </div>
       </div>
     );
@@ -39,7 +40,7 @@ export function SneakerGrid() {
             className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow"
           >
             <div className="aspect-square relative bg-slate-50">
-              <img src={sneaker.imageUrl} alt={sneaker.name} className="w-full h-full object-cover" />
+              <Image src={sneaker.imageUrl} alt={sneaker.name} fill className="object-cover" />
               <div className="absolute top-3 right-3 bg-slate-900 text-white px-3 py-1 rounded-lg text-sm font-semibold shadow-md">
                 ⭐ {avgRating}
               </div>

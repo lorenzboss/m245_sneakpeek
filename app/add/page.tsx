@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation } from 'convex/react';
-import { ChevronLeft, Image } from 'lucide-react';
+import { ChevronLeft, ImageIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { Header } from '../../components/Header';
@@ -115,7 +115,7 @@ export default function AddSneakerPage() {
                   </div>
                 ) : (
                   <div className="flex flex-col items-center gap-4 py-12 text-slate-500">
-                    <Image className="w-16 h-16" />
+                    <ImageIcon className="w-16 h-16" />
                     <span className="text-lg font-medium">Click to upload an image</span>
                     <span className="text-sm text-slate-400">PNG, JPG up to 10MB</span>
                   </div>
