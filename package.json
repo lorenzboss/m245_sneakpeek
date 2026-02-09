@@ -19,7 +19,7 @@
     "predev": "convex dev --until-success && convex dashboard",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
+    "lint": "eslint . && prettier --check .",
     "format": "prettier --write ."
   },
   "dependencies": {
@@ -41,7 +41,22 @@
     "eslint-config-next": "^16.1.6",
     "npm-run-all2": "^8.0.4",
     "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3"
+  },
+  "prettier": {
+    "quoteProps": "consistent",
+    "trailingComma": "all",
+    "printWidth": 120,
+    "semi": true,
+    "plugins": [
+      "prettier-plugin-tailwindcss"
+    ]
+  },
+  "postcss": {
+    "plugins": [
+      "@tailwindcss/postcss"
+    ]
   }
 }
