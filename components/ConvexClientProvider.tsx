@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { AuthKitProvider, useAccessToken, useAuth } from '@workos-inc/authkit-nextjs/components';
-import { ConvexProviderWithAuth, ConvexReactClient } from 'convex/react';
-import { ReactNode, useCallback, useState } from 'react';
-import { useUserSync } from './useUserSync';
+import { AuthKitProvider, useAccessToken, useAuth } from "@workos-inc/authkit-nextjs/components";
+import { ConvexProviderWithAuth, ConvexReactClient } from "convex/react";
+import { ReactNode, useCallback, useState } from "react";
+import { useUserSync } from "./useUserSync";
 
 export function ConvexClientProvider({ children }: { children: ReactNode }) {
   const [convex] = useState(() => {
@@ -42,7 +42,7 @@ function useAuthFromAuthKit() {
 
         return (await getAccessToken()) ?? null;
       } catch (error) {
-        console.error('Failed to get access token:', error);
+        console.error("Failed to get access token:", error);
         return null;
       }
     },

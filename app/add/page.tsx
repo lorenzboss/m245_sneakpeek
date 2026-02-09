@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useMutation } from 'convex/react';
-import { ChevronLeft, ImageIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
-import { Header } from '../../components/Header';
-import { api } from '../../convex/_generated/api';
+import { useMutation } from "convex/react";
+import { ChevronLeft, ImageIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import { Header } from "../../components/Header";
+import { api } from "../../convex/_generated/api";
 
 export default function AddSneakerPage() {
   const router = useRouter();
-  const [name, setName] = useState('');
-  const [brand, setBrand] = useState('');
-  const [comment, setComment] = useState('');
+  const [name, setName] = useState("");
+  const [brand, setBrand] = useState("");
+  const [comment, setComment] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -42,7 +42,7 @@ export default function AddSneakerPage() {
     e.preventDefault();
 
     if (!name || !brand || !comment || !image) {
-      alert('Please fill out all fields and select an image');
+      alert("Please fill out all fields and select an image");
       return;
     }
 
@@ -51,13 +51,13 @@ export default function AddSneakerPage() {
       const uploadUrl = await generateUploadUrl();
 
       const result = await fetch(uploadUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': image.type },
+        method: "POST",
+        headers: { "Content-Type": image.type },
         body: image,
       });
 
       if (!result.ok) {
-        throw new Error('Upload failed');
+        throw new Error("Upload failed");
       }
 
       const { storageId } = await result.json();
@@ -73,10 +73,10 @@ export default function AddSneakerPage() {
         ratingValue,
       });
 
-      router.push('/');
+      router.push("/");
     } catch (error) {
-      console.error('Error uploading sneaker:', error);
-      alert('Upload error. Please try again.');
+      console.error("Error uploading sneaker:", error);
+      alert("Upload error. Please try again.");
     } finally {
       setIsUploading(false);
     }
@@ -86,43 +86,43 @@ export default function AddSneakerPage() {
     <div className="min-h-screen bg-slate-50">
       <Header
         actionButton={{
-          label: 'Back',
+          label: "Back",
           icon: ChevronLeft,
-          href: '/',
+          href: "/",
         }}
       />
 
       {/* Main Content */}
-      <main className="container mx-auto px-2 md:px-4 py-8 max-w-4xl">
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4  md:p-8">
-          <h2 className="md:text-3xl text-2xl font-bold text-slate-900 mb-4 ">Create New Sneaker</h2>
+      <main className="container mx-auto max-w-4xl px-2 py-8 md:px-4">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm md:p-8">
+          <h2 className="mb-4 text-2xl font-bold text-slate-900 md:text-3xl">Create New Sneaker</h2>
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Image Upload - Featured */}
             <div>
-              <label className="block mb-3 font-semibold text-slate-900 text-lg">Sneaker Image</label>
+              <label className="mb-3 block text-lg font-semibold text-slate-900">Sneaker Image</label>
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-slate-300 rounded-xl overflow-hidden cursor-pointer hover:border-slate-400 transition-all bg-white hover:bg-slate-50 group"
+                className="group cursor-pointer overflow-hidden rounded-xl border-2 border-dashed border-slate-300 bg-white transition-all hover:border-slate-400 hover:bg-slate-50"
               >
                 {imagePreview ? (
-                  <div className="relative w-full h-80 bg-slate-50 p-8 flex items-center justify-center">
+                  <div className="relative flex h-80 w-full items-center justify-center bg-slate-50 p-8">
                     {/* Using native img instead of Next.js Image for local preview (data URL) before upload */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={imagePreview}
                       alt="Preview"
-                      className="max-w-full max-h-full object-contain rounded-lg shadow-sm"
+                      className="max-h-full max-w-full rounded-lg object-contain shadow-sm"
                     />
-                    <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity" />
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <span className="text-white opacity-0 group-hover:opacity-100 bg-slate-900 px-4 py-2 rounded-lg text-sm transition-opacity">
+                    <div className="absolute inset-0 bg-black opacity-0 transition-opacity group-hover:opacity-10" />
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                      <span className="rounded-lg bg-slate-900 px-4 py-2 text-sm text-white opacity-0 transition-opacity group-hover:opacity-100">
                         Click to change
                       </span>
                     </div>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center gap-4 py-12 text-slate-500">
-                    <ImageIcon className="w-16 h-16" />
+                    <ImageIcon className="h-16 w-16" />
                     <span className="text-lg font-medium">Click to upload an image</span>
                     <span className="text-sm text-slate-400">PNG, JPG, WEBP, AVIF up to 10MB</span>
                   </div>
@@ -139,9 +139,9 @@ export default function AddSneakerPage() {
             </div>
 
             {/* Name and Brand */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
-                <label htmlFor="name" className="block mb-2 font-semibold text-slate-900">
+                <label htmlFor="name" className="mb-2 block font-semibold text-slate-900">
                   Name
                 </label>
                 <input
@@ -150,13 +150,13 @@ export default function AddSneakerPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Air Jordan 1"
-                  className="w-full px-4 py-3 border border-slate-300 rounded-lg bg-white focus:border-slate-500 focus:ring-2 focus:ring-slate-200 outline-none transition-all text-slate-900"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 transition-all outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
                   required
                 />
               </div>
 
               <div>
-                <label htmlFor="brand" className="block mb-2 font-semibold text-slate-900">
+                <label htmlFor="brand" className="mb-2 block font-semibold text-slate-900">
                   Brand
                 </label>
                 <input
@@ -165,7 +165,7 @@ export default function AddSneakerPage() {
                   value={brand}
                   onChange={(e) => setBrand(e.target.value)}
                   placeholder="e.g. Nike"
-                  className="w-full px-4 py-3 border border-slate-300 rounded-lg bg-white focus:border-slate-500 focus:ring-2 focus:ring-slate-200 outline-none transition-all text-slate-900"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 transition-all outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
                   required
                 />
               </div>
@@ -173,7 +173,7 @@ export default function AddSneakerPage() {
 
             {/* Comment */}
             <div>
-              <label htmlFor="comment" className="block mb-2 font-semibold text-slate-900">
+              <label htmlFor="comment" className="mb-2 block font-semibold text-slate-900">
                 Comment
               </label>
               <textarea
@@ -182,19 +182,19 @@ export default function AddSneakerPage() {
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Share your thoughts about these sneakers..."
                 rows={4}
-                className="w-full px-4 py-3 border border-slate-300 rounded-lg bg-white focus:border-slate-500 focus:ring-2 focus:ring-slate-200 outline-none transition-all resize-none text-slate-900"
+                className="w-full resize-none rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 transition-all outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
                 required
               />
             </div>
 
             {/* Ratings */}
             <div className="space-y-6 border-t border-slate-200 pt-8">
-              <h3 className="font-bold text-xl text-slate-900">Rate Your Sneakers</h3>
+              <h3 className="text-xl font-bold text-slate-900">Rate Your Sneakers</h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 {/* Design */}
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <div className="flex justify-between mb-3">
+                <div className="rounded-lg bg-slate-50 p-4">
+                  <div className="mb-3 flex justify-between">
                     <label className="font-semibold text-slate-900">Design</label>
                     <span className="text-xl font-bold text-slate-900">{ratingDesign}</span>
                   </div>
@@ -204,17 +204,17 @@ export default function AddSneakerPage() {
                     max="5"
                     value={ratingDesign}
                     onChange={(e) => setRatingDesign(Number(e.target.value))}
-                    className="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900"
+                    className="h-3 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-slate-900"
                   />
-                  <div className="flex justify-between text-xs text-slate-500 mt-1">
+                  <div className="mt-1 flex justify-between text-xs text-slate-500">
                     <span>1</span>
                     <span>5</span>
                   </div>
                 </div>
 
                 {/* Comfort */}
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <div className="flex justify-between mb-3">
+                <div className="rounded-lg bg-slate-50 p-4">
+                  <div className="mb-3 flex justify-between">
                     <label className="font-semibold text-slate-900">Comfort</label>
                     <span className="text-xl font-bold text-slate-900">{ratingComfort}</span>
                   </div>
@@ -224,17 +224,17 @@ export default function AddSneakerPage() {
                     max="5"
                     value={ratingComfort}
                     onChange={(e) => setRatingComfort(Number(e.target.value))}
-                    className="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900"
+                    className="h-3 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-slate-900"
                   />
-                  <div className="flex justify-between text-xs text-slate-500 mt-1">
+                  <div className="mt-1 flex justify-between text-xs text-slate-500">
                     <span>1</span>
                     <span>5</span>
                   </div>
                 </div>
 
                 {/* Quality */}
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <div className="flex justify-between mb-3">
+                <div className="rounded-lg bg-slate-50 p-4">
+                  <div className="mb-3 flex justify-between">
                     <label className="font-semibold text-slate-900">Quality</label>
                     <span className="text-xl font-bold text-slate-900">{ratingQuality}</span>
                   </div>
@@ -244,17 +244,17 @@ export default function AddSneakerPage() {
                     max="5"
                     value={ratingQuality}
                     onChange={(e) => setRatingQuality(Number(e.target.value))}
-                    className="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900"
+                    className="h-3 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-slate-900"
                   />
-                  <div className="flex justify-between text-xs text-slate-500 mt-1">
+                  <div className="mt-1 flex justify-between text-xs text-slate-500">
                     <span>1</span>
                     <span>5</span>
                   </div>
                 </div>
 
                 {/* Value for Money */}
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <div className="flex justify-between mb-3">
+                <div className="rounded-lg bg-slate-50 p-4">
+                  <div className="mb-3 flex justify-between">
                     <label className="font-semibold text-slate-900">Value for Money</label>
                     <span className="text-xl font-bold text-slate-900">{ratingValue}</span>
                   </div>
@@ -264,9 +264,9 @@ export default function AddSneakerPage() {
                     max="5"
                     value={ratingValue}
                     onChange={(e) => setRatingValue(Number(e.target.value))}
-                    className="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900"
+                    className="h-3 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-slate-900"
                   />
-                  <div className="flex justify-between text-xs text-slate-500 mt-1">
+                  <div className="mt-1 flex justify-between text-xs text-slate-500">
                     <span>1</span>
                     <span>5</span>
                   </div>
@@ -275,20 +275,20 @@ export default function AddSneakerPage() {
             </div>
 
             {/* Submit Button */}
-            <div className="flex gap-4 pt-6 border-t border-slate-200">
+            <div className="flex gap-4 border-t border-slate-200 pt-6">
               <button
                 type="button"
-                onClick={() => router.push('/')}
-                className="flex-1 bg-slate-200 text-slate-900 px-4 py-4 rounded-lg hover:bg-slate-300 transition-colors font-semibold text-lg"
+                onClick={() => router.push("/")}
+                className="flex-1 rounded-lg bg-slate-200 px-4 py-4 text-lg font-semibold text-slate-900 transition-colors hover:bg-slate-300"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isUploading}
-                className="flex-1 bg-slate-900 text-white px-4 py-4 rounded-lg hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg shadow-md"
+                className="flex-1 rounded-lg bg-slate-900 px-4 py-4 text-lg font-semibold text-white shadow-md transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {isUploading ? 'Uploading...' : 'Save Sneaker'}
+                {isUploading ? "Uploading..." : "Save Sneaker"}
               </button>
             </div>
           </form>

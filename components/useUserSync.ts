@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useAuth } from '@workos-inc/authkit-nextjs/components';
-import { useAction, useMutation } from 'convex/react';
-import { useEffect } from 'react';
-import { api } from '../convex/_generated/api';
+import { useAuth } from "@workos-inc/authkit-nextjs/components";
+import { useAction, useMutation } from "convex/react";
+import { useEffect } from "react";
+import { api } from "../convex/_generated/api";
 
 /**
  * Automatically syncs authenticated users between WorkOS and Convex.
@@ -22,7 +22,7 @@ export function useUserSync() {
     storeUser()
       .then(() => fetchUserDetails())
       .catch((error) => {
-        console.error('Failed to sync user:', error);
+        console.error("Failed to sync user:", error);
       });
   }, [user, loading, storeUser, fetchUserDetails]);
 }

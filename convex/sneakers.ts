@@ -1,5 +1,5 @@
-import { mutation, query } from './_generated/server';
-import { v } from 'convex/values';
+import { mutation, query } from "./_generated/server";
+import { v } from "convex/values";
 
 export const generateUploadUrl = mutation({
   args: {},
@@ -14,25 +14,25 @@ export const addSneaker = mutation({
     name: v.string(),
     brand: v.string(),
     comment: v.string(),
-    imageStorageId: v.id('_storage'),
+    imageStorageId: v.id("_storage"),
     ratingDesign: v.number(),
     ratingComfort: v.number(),
     ratingQuality: v.number(),
     ratingValue: v.number(),
   },
-  returns: v.id('sneakers'),
+  returns: v.id("sneakers"),
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
-      throw new Error('Not authenticated');
+      throw new Error("Not authenticated");
     }
 
     const imageUrl = await ctx.storage.getUrl(args.imageStorageId);
     if (!imageUrl) {
-      throw new Error('Image upload failed');
+      throw new Error("Image upload failed");
     }
 
-    const sneakerId = await ctx.db.insert('sneakers', {
+    const sneakerId = await ctx.db.insert("sneakers", {
       name: args.name,
       brand: args.brand,
       comment: args.comment,
@@ -54,7 +54,7 @@ export const listSneakers = query({
   args: {},
   returns: v.array(
     v.object({
-      _id: v.id('sneakers'),
+      _id: v.id("sneakers"),
       name: v.string(),
       brand: v.string(),
       comment: v.string(),
@@ -68,11 +68,11 @@ export const listSneakers = query({
     }),
   ),
   handler: async (ctx) => {
-    const sneakers = await ctx.db.query('sneakers').order('desc').collect();
+    const sneakers = await ctx.db.query("sneakers").order("desc").collect();
     return sneakers.map((sneaker) => ({
       _id: sneaker._id,
       name: sneaker.name,
-      brand: sneaker.brand || 'Unbekannt',
+      brand: sneaker.brand || "Unbekannt",
       comment: sneaker.comment,
       imageUrl: sneaker.imageUrl,
       userId: sneaker.userId,
@@ -89,7 +89,7 @@ export const getMySneakers = query({
   args: {},
   returns: v.array(
     v.object({
-      _id: v.id('sneakers'),
+      _id: v.id("sneakers"),
       name: v.string(),
       brand: v.string(),
       comment: v.string(),
@@ -109,15 +109,15 @@ export const getMySneakers = query({
     }
 
     const sneakers = await ctx.db
-      .query('sneakers')
-      .withIndex('by_user', (q) => q.eq('userId', identity.subject))
-      .order('desc')
+      .query("sneakers")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .order("desc")
       .collect();
 
     return sneakers.map((sneaker) => ({
       _id: sneaker._id,
       name: sneaker.name,
-      brand: sneaker.brand || 'Unbekannt',
+      brand: sneaker.brand || "Unbekannt",
       comment: sneaker.comment,
       imageUrl: sneaker.imageUrl,
       userId: sneaker.userId,

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useAuth } from '@workos-inc/authkit-nextjs/components';
-import { useQuery } from 'convex/react';
-import { LogOut, type LucideIcon } from 'lucide-react';
-import Link from 'next/link';
-import { api } from '../convex/_generated/api';
+import { useAuth } from "@workos-inc/authkit-nextjs/components";
+import { useQuery } from "convex/react";
+import { LogOut, type LucideIcon } from "lucide-react";
+import Link from "next/link";
+import { api } from "../convex/_generated/api";
 
 interface HeaderProps {
   actionButton?: {
@@ -19,12 +19,12 @@ export function Header({ actionButton }: HeaderProps) {
   const convexUser = useQuery(api.users.getCurrentUser);
 
   return (
-    <header className="sticky top-0 z-10 bg-white border-b border-slate-200 shadow-sm">
+    <header className="sticky top-0 z-10 border-b border-slate-200 bg-white shadow-sm">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between gap-4">
           {/* Logo */}
           <Link href="/" className="shrink-0">
-            <h1 className="text-xl md:text-2xl font-bold text-slate-900">SneakPeak</h1>
+            <h1 className="text-xl font-bold text-slate-900 md:text-2xl">SneakPeak</h1>
           </Link>
 
           {/* User Actions */}
@@ -32,7 +32,7 @@ export function Header({ actionButton }: HeaderProps) {
             <div className="flex items-center gap-2 md:gap-3">
               {/* Username */}
               {convexUser?.name && (
-                <span className="hidden mt-0.5 sm:inline-block text-slate-700 truncate max-w-30 md:max-w-50">
+                <span className="mt-0.5 hidden max-w-30 truncate text-slate-700 sm:inline-block md:max-w-50">
                   {convexUser.name}
                 </span>
               )}
@@ -41,9 +41,9 @@ export function Header({ actionButton }: HeaderProps) {
               {actionButton && (
                 <Link
                   href={actionButton.href}
-                  className="bg-slate-900 text-white px-2 md:px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-colors flex items-center gap-1.5 md:gap-2 text-sm md:text-base shrink-0"
+                  className="flex shrink-0 items-center gap-1.5 rounded-lg bg-slate-900 px-2 py-1.5 text-sm text-white transition-colors hover:bg-slate-800 md:gap-2 md:px-3 md:text-base"
                 >
-                  <actionButton.icon className="w-4 h-4 md:w-5 md:h-5" />
+                  <actionButton.icon className="h-4 w-4 md:h-5 md:w-5" />
                   <span className="hidden sm:inline">{actionButton.label}</span>
                 </Link>
               )}
@@ -51,9 +51,9 @@ export function Header({ actionButton }: HeaderProps) {
               {/* Logout Button */}
               <button
                 onClick={() => signOut()}
-                className="bg-slate-100 text-slate-700 hover:bg-slate-200 px-2 md:px-3 py-1.5 md:gap-2 rounded-lg transition-colors gap-1.5 items-center text-sm md:text-base flex shrink-0"
+                className="flex shrink-0 items-center gap-1.5 rounded-lg bg-slate-100 px-2 py-1.5 text-sm text-slate-700 transition-colors hover:bg-slate-200 md:gap-2 md:px-3 md:text-base"
               >
-                <LogOut className="w-5 h-5" />
+                <LogOut className="h-5 w-5" />
                 <span className="hidden sm:inline">Sign out</span>
               </button>
             </div>
