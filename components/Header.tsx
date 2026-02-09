@@ -44,7 +44,7 @@ export function Header({ actionButton }: HeaderProps) {
                   className="flex shrink-0 items-center gap-1.5 rounded-lg bg-slate-900 px-2 py-1.5 text-sm text-white transition-colors hover:bg-slate-800 md:gap-2 md:px-3 md:text-base"
                 >
                   <actionButton.icon className="h-4 w-4 md:h-5 md:w-5" />
-                  <span className="hidden sm:inline">{actionButton.label}</span>
+                  <span className="sm:inline hidden">{actionButton.label}</span>
                 </Link>
               )}
 
