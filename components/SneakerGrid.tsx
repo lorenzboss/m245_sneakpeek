@@ -33,10 +33,15 @@ export function SneakerGrid() {
         return (
           <div
             key={sneaker._id}
-            className="overflow-hidden rounded-lg border border-slate-200 bg-white transition-shadow hover:shadow-md"
+            className="group overflow-hidden rounded-lg border border-slate-200 bg-white transition-shadow hover:shadow-md"
           >
-            <div className="relative aspect-square bg-slate-50">
-              <Image src={sneaker.imageUrl} alt={sneaker.name} fill className="object-cover" />
+            <div className="relative aspect-square overflow-hidden bg-slate-50">
+              <Image
+                src={sneaker.imageUrl}
+                alt={sneaker.name}
+                fill
+                className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
+              />
               {sneaker.ratingsCount > 0 && (
                 <div className="absolute top-3 right-3 flex items-center gap-2 rounded-full bg-slate-900 px-3 py-1 font-semibold text-white shadow-md">
                   <StarIcon fill="white" className="size-4" /> {sneaker.avgRating.toFixed(1)}
