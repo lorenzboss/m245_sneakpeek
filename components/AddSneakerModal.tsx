@@ -16,13 +16,13 @@ export function AddSneakerModal({ isOpen, onClose }: AddSneakerModalProps) {
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  
+
   // Rating states
   const [ratingDesign, setRatingDesign] = useState(3);
   const [ratingComfort, setRatingComfort] = useState(3);
   const [ratingQuality, setRatingQuality] = useState(3);
   const [ratingValue, setRatingValue] = useState(3);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const generateUploadUrl = useMutation(api.sneakers.generateUploadUrl);
@@ -42,9 +42,9 @@ export function AddSneakerModal({ isOpen, onClose }: AddSneakerModalProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name || !brand || !comment || !image) {
-      alert('Bitte fülle alle Felder aus und wähle ein Bild');
+      alert('Please fill out all fields and select an image');
       return;
     }
 
@@ -91,7 +91,7 @@ export function AddSneakerModal({ isOpen, onClose }: AddSneakerModalProps) {
       onClose();
     } catch (error) {
       console.error('Error uploading sneaker:', error);
-      alert('Fehler beim Hochladen. Bitte versuche es erneut.');
+      alert('Upload error. Please try again.');
     } finally {
       setIsUploading(false);
     }
@@ -100,21 +100,15 @@ export function AddSneakerModal({ isOpen, onClose }: AddSneakerModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto py-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto py-8 bg-slate-900 bg-opacity-50">
       {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black bg-opacity-50"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0" onClick={onClose} />
 
       {/* Modal */}
-      <div className="relative bg-background border-2 border-slate-200 dark:border-slate-800 rounded-lg p-8 w-full max-w-3xl mx-4 shadow-xl my-8">
+      <div className="relative bg-white border border-slate-200 rounded-xl p-8 w-full max-w-3xl mx-4 shadow-2xl my-8">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Sneaker hinzufügen</h2>
-          <button
-            onClick={onClose}
-            className="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
-          >
+          <h2 className="text-2xl font-bold text-slate-900">Add Sneaker</h2>
+          <button onClick={onClose} className="text-slate-500 hover:text-slate-700 transition-colors">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -133,7 +127,7 @@ export function AddSneakerModal({ isOpen, onClose }: AddSneakerModalProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Name Input */}
             <div>
-              <label htmlFor="name" className="block mb-2 font-medium">
+              <label htmlFor="name" className="block mb-2 font-medium text-slate-700">
                 Name
               </label>
               <input
@@ -141,24 +135,24 @@ export function AddSneakerModal({ isOpen, onClose }: AddSneakerModalProps) {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="z.B. Air Jordan 1"
-                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-md bg-background"
+                placeholder="e.g. Air Jordan 1"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white focus:border-slate-500 focus:ring-1 focus:ring-slate-500 outline-none transition-colors"
                 required
               />
             </div>
 
             {/* Brand Input */}
             <div>
-              <label htmlFor="brand" className="block mb-2 font-medium">
-                Marke
+              <label htmlFor="brand" className="block mb-2 font-medium text-slate-700">
+                Brand
               </label>
               <input
                 id="brand"
                 type="text"
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
-                placeholder="z.B. Nike"
-                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-md bg-background"
+                placeholder="e.g. Nike"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white focus:border-slate-500 focus:ring-1 focus:ring-slate-500 outline-none transition-colors"
                 required
               />
             </div>
@@ -166,31 +160,31 @@ export function AddSneakerModal({ isOpen, onClose }: AddSneakerModalProps) {
 
           {/* Comment Input */}
           <div>
-            <label htmlFor="comment" className="block mb-2 font-medium">
-              Kommentar
+            <label htmlFor="comment" className="block mb-2 font-medium text-slate-700">
+              Comment
             </label>
             <textarea
               id="comment"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              placeholder="Dein Kommentar..."
+              placeholder="Your comment..."
               rows={3}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-md bg-background resize-none"
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white focus:border-slate-500 focus:ring-1 focus:ring-slate-500 outline-none transition-colors resize-none"
               required
             />
           </div>
 
           {/* Rating Sliders */}
-          <div className="space-y-4 border-t border-slate-200 dark:border-slate-800 pt-6">
-            <h3 className="font-semibold text-lg text-slate-700 dark:text-slate-300 mb-3">Bewertung</h3>
-            
+          <div className="space-y-4 border-t border-slate-200 pt-6">
+            <h3 className="font-semibold text-lg text-slate-900 mb-3">Rating</h3>
+
             {/* Ratings in 2 columns */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Design */}
               <div>
                 <div className="flex justify-between mb-2">
-                  <label className="text-sm font-medium">Design</label>
-                  <span className="text-sm font-bold text-foreground">{ratingDesign}</span>
+                  <label className="text-sm font-medium text-slate-700">Design</label>
+                  <span className="text-sm font-bold text-slate-900">{ratingDesign}</span>
                 </div>
                 <input
                   type="range"
@@ -198,15 +192,15 @@ export function AddSneakerModal({ isOpen, onClose }: AddSneakerModalProps) {
                   max="5"
                   value={ratingDesign}
                   onChange={(e) => setRatingDesign(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-foreground"
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900"
                 />
               </div>
 
               {/* Comfort */}
               <div>
                 <div className="flex justify-between mb-2">
-                  <label className="text-sm font-medium">Comfort</label>
-                  <span className="text-sm font-bold text-foreground">{ratingComfort}</span>
+                  <label className="text-sm font-medium text-slate-700">Comfort</label>
+                  <span className="text-sm font-bold text-slate-900">{ratingComfort}</span>
                 </div>
                 <input
                   type="range"
@@ -214,15 +208,15 @@ export function AddSneakerModal({ isOpen, onClose }: AddSneakerModalProps) {
                   max="5"
                   value={ratingComfort}
                   onChange={(e) => setRatingComfort(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-foreground"
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900"
                 />
               </div>
 
               {/* Quality */}
               <div>
                 <div className="flex justify-between mb-2">
-                  <label className="text-sm font-medium">Quality</label>
-                  <span className="text-sm font-bold text-foreground">{ratingQuality}</span>
+                  <label className="text-sm font-medium text-slate-700">Quality</label>
+                  <span className="text-sm font-bold text-slate-900">{ratingQuality}</span>
                 </div>
                 <input
                   type="range"
@@ -230,15 +224,15 @@ export function AddSneakerModal({ isOpen, onClose }: AddSneakerModalProps) {
                   max="5"
                   value={ratingQuality}
                   onChange={(e) => setRatingQuality(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-foreground"
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900"
                 />
               </div>
 
               {/* Value for Money */}
               <div>
                 <div className="flex justify-between mb-2">
-                  <label className="text-sm font-medium">Value for Money</label>
-                  <span className="text-sm font-bold text-foreground">{ratingValue}</span>
+                  <label className="text-sm font-medium text-slate-700">Value for Money</label>
+                  <span className="text-sm font-bold text-slate-900">{ratingValue}</span>
                 </div>
                 <input
                   type="range"
@@ -246,7 +240,7 @@ export function AddSneakerModal({ isOpen, onClose }: AddSneakerModalProps) {
                   max="5"
                   value={ratingValue}
                   onChange={(e) => setRatingValue(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-foreground"
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900"
                 />
               </div>
             </div>
@@ -254,17 +248,13 @@ export function AddSneakerModal({ isOpen, onClose }: AddSneakerModalProps) {
 
           {/* Image Upload */}
           <div>
-            <label className="block mb-2 font-medium">Bild</label>
+            <label className="block mb-2 font-medium text-slate-700">Image</label>
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-md p-4 cursor-pointer hover:border-slate-400 dark:hover:border-slate-600 transition-colors"
+              className="border-2 border-dashed border-slate-300 rounded-lg p-8 cursor-pointer hover:border-slate-400 transition-colors bg-white hover:bg-slate-50"
             >
               {imagePreview ? (
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="w-full h-48 object-cover rounded-md"
-                />
+                <img src={imagePreview} alt="Preview" className="w-full h-48 object-cover rounded-md" />
               ) : (
                 <div className="flex flex-col items-center gap-2 text-slate-500">
                   <svg
@@ -281,7 +271,7 @@ export function AddSneakerModal({ isOpen, onClose }: AddSneakerModalProps) {
                       d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
                     />
                   </svg>
-                  <span>Klicke um ein Bild hochzuladen</span>
+                  <span className="text-slate-600">Click to upload an image</span>
                 </div>
               )}
             </div>
@@ -299,9 +289,9 @@ export function AddSneakerModal({ isOpen, onClose }: AddSneakerModalProps) {
           <button
             type="submit"
             disabled={isUploading}
-            className="bg-foreground text-background px-6 py-3 rounded-md hover:opacity-80 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed text-lg font-semibold"
+            className="bg-slate-900 text-white px-6 py-3 rounded-lg hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-lg font-semibold shadow-sm"
           >
-            {isUploading ? 'Wird hochgeladen...' : 'Speichern'}
+            {isUploading ? 'Uploading...' : 'Save'}
           </button>
         </form>
       </div>

@@ -80,7 +80,7 @@ export const myAction = action({
     await ctx.runMutation(api.myFunctions.addNumber, {
       value: args.first,
     });
-    
+
     return null;
   },
 });

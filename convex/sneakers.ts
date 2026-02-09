@@ -65,7 +65,7 @@ export const listSneakers = query({
       ratingComfort: v.number(),
       ratingQuality: v.number(),
       ratingValue: v.number(),
-    })
+    }),
   ),
   handler: async (ctx) => {
     const sneakers = await ctx.db.query('sneakers').order('desc').collect();
@@ -100,7 +100,7 @@ export const getMySneakers = query({
       ratingComfort: v.number(),
       ratingQuality: v.number(),
       ratingValue: v.number(),
-    })
+    }),
   ),
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
