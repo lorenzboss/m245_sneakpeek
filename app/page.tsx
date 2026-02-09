@@ -1,17 +1,17 @@
 'use client';
 
-import { Authenticated, Unauthenticated, useMutation, useQuery } from 'convex/react';
-import { api } from '../convex/_generated/api';
-import Link from 'next/link';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import type { User } from '@workos-inc/node';
+import { Authenticated, Unauthenticated, useMutation, useQuery } from 'convex/react';
+import Link from 'next/link';
+import { api } from '../convex/_generated/api';
 
 export default function Home() {
   const { user, signOut } = useAuth();
 
   return (
     <>
-      <header className="sticky top-0 z-10 bg-background p-4 border-b-2 border-slate-200 dark:border-slate-800 flex flex-row justify-between items-center">
+      <header className="sticky top-0 z-10 bg-background p-4 border-b-2 border-slate-200 flex flex-row justify-between items-center">
         Convex + Next.js + WorkOS
         {user && <UserMenu user={user} onSignOut={signOut} />}
       </header>
@@ -73,17 +73,12 @@ function Content() {
       <p>Numbers: {numbers?.length === 0 ? 'Click the button!' : (numbers?.join(', ') ?? '...')}</p>
       <p>
         Edit{' '}
-        <code className="text-sm font-bold font-mono bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded-md">
-          convex/myFunctions.ts
-        </code>{' '}
+        <code className="text-sm font-bold font-mono bg-slate-200 px-1 py-0.5 rounded-md">convex/myFunctions.ts</code>{' '}
         to change your backend
       </p>
       <p>
-        Edit{' '}
-        <code className="text-sm font-bold font-mono bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded-md">
-          app/page.tsx
-        </code>{' '}
-        to change your frontend
+        Edit <code className="text-sm font-bold font-mono bg-slate-200 px-1 py-0.5 rounded-md">app/page.tsx</code> to
+        change your frontend
       </p>
       <p>
         See the{' '}
@@ -129,7 +124,7 @@ function Content() {
 
 function ResourceCard({ title, description, href }: { title: string; description: string; href: string }) {
   return (
-    <div className="flex flex-col gap-2 bg-slate-200 dark:bg-slate-800 p-4 rounded-md h-28 overflow-auto">
+    <div className="flex flex-col gap-2 bg-slate-200 p-4 rounded-md h-28 overflow-auto">
       <a href={href} className="text-sm underline hover:no-underline">
         {title}
       </a>
