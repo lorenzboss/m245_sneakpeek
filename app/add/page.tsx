@@ -102,13 +102,20 @@ export default function AddSneakerPage() {
               <label className="block mb-3 font-semibold text-slate-900 text-lg">Sneaker Image</label>
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-slate-300 rounded-xl p-8 cursor-pointer hover:border-slate-400 transition-all bg-white hover:bg-slate-50 group"
+                className="border-2 border-dashed border-slate-300 rounded-xl overflow-hidden cursor-pointer hover:border-slate-400 transition-all bg-white hover:bg-slate-50 group"
               >
                 {imagePreview ? (
-                  <div className="relative">
-                    <img src={imagePreview} alt="Preview" className="w-full max-h-96 object-contain rounded-lg" />
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all rounded-lg flex items-center justify-center">
-                      <span className="text-white opacity-0 group-hover:opacity-100 bg-slate-900 px-4 py-2 rounded-lg text-sm">
+                  <div className="relative w-full h-80 bg-slate-50 p-8 flex items-center justify-center">
+                    {/* Using native img instead of Next.js Image for local preview (data URL) before upload */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="max-w-full max-h-full object-contain rounded-lg shadow-sm"
+                    />
+                    <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity" />
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <span className="text-white opacity-0 group-hover:opacity-100 bg-slate-900 px-4 py-2 rounded-lg text-sm transition-opacity">
                         Click to change
                       </span>
                     </div>
@@ -117,14 +124,14 @@ export default function AddSneakerPage() {
                   <div className="flex flex-col items-center gap-4 py-12 text-slate-500">
                     <ImageIcon className="w-16 h-16" />
                     <span className="text-lg font-medium">Click to upload an image</span>
-                    <span className="text-sm text-slate-400">PNG, JPG up to 10MB</span>
+                    <span className="text-sm text-slate-400">PNG, JPG, WEBP, AVIF up to 10MB</span>
                   </div>
                 )}
               </div>
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/*"
+                accept="image/png,image/jpeg,image/jpg,image/webp,image/avif"
                 onChange={handleImageChange}
                 className="hidden"
                 required
