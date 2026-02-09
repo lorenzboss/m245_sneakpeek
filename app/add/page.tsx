@@ -11,15 +11,10 @@ export default function AddSneakerPage() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [brand, setBrand] = useState("");
-  const [comment, setComment] = useState("");
+  const [description, setDescription] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-
-  const [ratingDesign, setRatingDesign] = useState(3);
-  const [ratingComfort, setRatingComfort] = useState(3);
-  const [ratingQuality, setRatingQuality] = useState(3);
-  const [ratingValue, setRatingValue] = useState(3);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -41,7 +36,7 @@ export default function AddSneakerPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!name || !brand || !comment || !image) {
+    if (!name || !brand || !description || !image) {
       alert("Please fill out all fields and select an image");
       return;
     }
@@ -65,12 +60,8 @@ export default function AddSneakerPage() {
       await addSneaker({
         name,
         brand,
-        comment,
+        description,
         imageStorageId: storageId,
-        ratingDesign,
-        ratingComfort,
-        ratingQuality,
-        ratingValue,
       });
 
       router.push("/");
@@ -171,107 +162,20 @@ export default function AddSneakerPage() {
               </div>
             </div>
 
-            {/* Comment */}
+            {/* Description */}
             <div>
-              <label htmlFor="comment" className="mb-2 block font-semibold text-slate-900">
-                Comment
+              <label htmlFor="description" className="mb-2 block font-semibold text-slate-900">
+                Description
               </label>
               <textarea
-                id="comment"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="Share your thoughts about these sneakers..."
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Describe your sneakers..."
                 rows={4}
                 className="w-full resize-none rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 transition-all outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
                 required
               />
-            </div>
-
-            {/* Ratings */}
-            <div className="space-y-6 border-t border-slate-200 pt-8">
-              <h3 className="text-xl font-bold text-slate-900">Rate Your Sneakers</h3>
-
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                {/* Design */}
-                <div className="rounded-lg bg-slate-50 p-4">
-                  <div className="mb-3 flex justify-between">
-                    <label className="font-semibold text-slate-900">Design</label>
-                    <span className="text-xl font-bold text-slate-900">{ratingDesign}</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="1"
-                    max="5"
-                    value={ratingDesign}
-                    onChange={(e) => setRatingDesign(Number(e.target.value))}
-                    className="h-3 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-slate-900"
-                  />
-                  <div className="mt-1 flex justify-between text-xs text-slate-500">
-                    <span>1</span>
-                    <span>5</span>
-                  </div>
-                </div>
-
-                {/* Comfort */}
-                <div className="rounded-lg bg-slate-50 p-4">
-                  <div className="mb-3 flex justify-between">
-                    <label className="font-semibold text-slate-900">Comfort</label>
-                    <span className="text-xl font-bold text-slate-900">{ratingComfort}</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="1"
-                    max="5"
-                    value={ratingComfort}
-                    onChange={(e) => setRatingComfort(Number(e.target.value))}
-                    className="h-3 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-slate-900"
-                  />
-                  <div className="mt-1 flex justify-between text-xs text-slate-500">
-                    <span>1</span>
-                    <span>5</span>
-                  </div>
-                </div>
-
-                {/* Quality */}
-                <div className="rounded-lg bg-slate-50 p-4">
-                  <div className="mb-3 flex justify-between">
-                    <label className="font-semibold text-slate-900">Quality</label>
-                    <span className="text-xl font-bold text-slate-900">{ratingQuality}</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="1"
-                    max="5"
-                    value={ratingQuality}
-                    onChange={(e) => setRatingQuality(Number(e.target.value))}
-                    className="h-3 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-slate-900"
-                  />
-                  <div className="mt-1 flex justify-between text-xs text-slate-500">
-                    <span>1</span>
-                    <span>5</span>
-                  </div>
-                </div>
-
-                {/* Value for Money */}
-                <div className="rounded-lg bg-slate-50 p-4">
-                  <div className="mb-3 flex justify-between">
-                    <label className="font-semibold text-slate-900">Value for Money</label>
-                    <span className="text-xl font-bold text-slate-900">{ratingValue}</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="1"
-                    max="5"
-                    value={ratingValue}
-                    onChange={(e) => setRatingValue(Number(e.target.value))}
-                    className="h-3 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-slate-900"
-                  />
-                  <div className="mt-1 flex justify-between text-xs text-slate-500">
-                    <span>1</span>
-                    <span>5</span>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Submit Button */}

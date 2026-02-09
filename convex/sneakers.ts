@@ -1,5 +1,5 @@
-import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 
 export const generateUploadUrl = mutation({
   args: {},
@@ -13,18 +13,24 @@ export const addSneaker = mutation({
   args: {
     name: v.string(),
     brand: v.string(),
-    comment: v.string(),
+    description: v.string(),
     imageStorageId: v.id("_storage"),
-    ratingDesign: v.number(),
-    ratingComfort: v.number(),
-    ratingQuality: v.number(),
-    ratingValue: v.number(),
   },
   returns: v.id("sneakers"),
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error("Not authenticated");
+    }
+
+    // Get the user document from the database
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_userId", (q) => q.eq("userId", identity.subject))
+      .first();
+
+    if (!user) {
+      throw new Error("User not found in database");
     }
 
     const imageUrl = await ctx.storage.getUrl(args.imageStorageId);
@@ -35,15 +41,11 @@ export const addSneaker = mutation({
     const sneakerId = await ctx.db.insert("sneakers", {
       name: args.name,
       brand: args.brand,
-      comment: args.comment,
+      description: args.description,
       imageUrl,
       imageStorageId: args.imageStorageId,
-      userId: identity.subject,
+      creatorId: user._id,
       createdAt: Date.now(),
-      ratingDesign: args.ratingDesign,
-      ratingComfort: args.ratingComfort,
-      ratingQuality: args.ratingQuality,
-      ratingValue: args.ratingValue,
     });
 
     return sneakerId;
@@ -57,31 +59,51 @@ export const listSneakers = query({
       _id: v.id("sneakers"),
       name: v.string(),
       brand: v.string(),
-      comment: v.string(),
+      description: v.string(),
       imageUrl: v.string(),
-      userId: v.string(),
+      creatorId: v.id("users"),
       createdAt: v.number(),
-      ratingDesign: v.number(),
-      ratingComfort: v.number(),
-      ratingQuality: v.number(),
-      ratingValue: v.number(),
+      avgRating: v.number(),
+      ratingsCount: v.number(),
     }),
   ),
   handler: async (ctx) => {
     const sneakers = await ctx.db.query("sneakers").order("desc").collect();
-    return sneakers.map((sneaker) => ({
-      _id: sneaker._id,
-      name: sneaker.name,
-      brand: sneaker.brand || "Unbekannt",
-      comment: sneaker.comment,
-      imageUrl: sneaker.imageUrl,
-      userId: sneaker.userId,
-      createdAt: sneaker.createdAt,
-      ratingDesign: sneaker.ratingDesign || 0,
-      ratingComfort: sneaker.ratingComfort || 0,
-      ratingQuality: sneaker.ratingQuality || 0,
-      ratingValue: sneaker.ratingValue || 0,
-    }));
+
+    const sneakersWithRatings = await Promise.all(
+      sneakers.map(async (sneaker) => {
+        // Get all ratings for this sneaker
+        const ratings = await ctx.db
+          .query("ratings")
+          .withIndex("by_sneaker", (q) => q.eq("sneakerId", sneaker._id))
+          .collect();
+
+        // Calculate average rating from the 4 criteria (excluding sizing)
+        let avgRating = 0;
+        if (ratings.length > 0) {
+          const totalRating = ratings.reduce((sum, rating) => {
+            const ratingAvg =
+              (rating.ratingDesign + rating.ratingComfort + rating.ratingQuality + rating.ratingValue) / 4;
+            return sum + ratingAvg;
+          }, 0);
+          avgRating = totalRating / ratings.length;
+        }
+
+        return {
+          _id: sneaker._id,
+          name: sneaker.name,
+          brand: sneaker.brand || "Unbekannt",
+          description: sneaker.description,
+          imageUrl: sneaker.imageUrl,
+          creatorId: sneaker.creatorId,
+          createdAt: sneaker.createdAt,
+          avgRating,
+          ratingsCount: ratings.length,
+        };
+      }),
+    );
+
+    return sneakersWithRatings;
   },
 });
 
@@ -92,14 +114,12 @@ export const getMySneakers = query({
       _id: v.id("sneakers"),
       name: v.string(),
       brand: v.string(),
-      comment: v.string(),
+      description: v.string(),
       imageUrl: v.string(),
-      userId: v.string(),
+      creatorId: v.id("users"),
       createdAt: v.number(),
-      ratingDesign: v.number(),
-      ratingComfort: v.number(),
-      ratingQuality: v.number(),
-      ratingValue: v.number(),
+      avgRating: v.number(),
+      ratingsCount: v.number(),
     }),
   ),
   handler: async (ctx) => {
@@ -108,24 +128,55 @@ export const getMySneakers = query({
       return [];
     }
 
+    // Get the user document to use their _id
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_userId", (q) => q.eq("userId", identity.subject))
+      .first();
+
+    if (!user) {
+      return [];
+    }
+
     const sneakers = await ctx.db
       .query("sneakers")
-      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .withIndex("by_creator", (q) => q.eq("creatorId", user._id))
       .order("desc")
       .collect();
 
-    return sneakers.map((sneaker) => ({
-      _id: sneaker._id,
-      name: sneaker.name,
-      brand: sneaker.brand || "Unbekannt",
-      comment: sneaker.comment,
-      imageUrl: sneaker.imageUrl,
-      userId: sneaker.userId,
-      createdAt: sneaker.createdAt,
-      ratingDesign: sneaker.ratingDesign || 0,
-      ratingComfort: sneaker.ratingComfort || 0,
-      ratingQuality: sneaker.ratingQuality || 0,
-      ratingValue: sneaker.ratingValue || 0,
-    }));
+    const sneakersWithRatings = await Promise.all(
+      sneakers.map(async (sneaker) => {
+        // Get all ratings for this sneaker
+        const ratings = await ctx.db
+          .query("ratings")
+          .withIndex("by_sneaker", (q) => q.eq("sneakerId", sneaker._id))
+          .collect();
+
+        // Calculate average rating from the 4 criteria (excluding sizing)
+        let avgRating = 0;
+        if (ratings.length > 0) {
+          const totalRating = ratings.reduce((sum, rating) => {
+            const ratingAvg =
+              (rating.ratingDesign + rating.ratingComfort + rating.ratingQuality + rating.ratingValue) / 4;
+            return sum + ratingAvg;
+          }, 0);
+          avgRating = totalRating / ratings.length;
+        }
+
+        return {
+          _id: sneaker._id,
+          name: sneaker.name,
+          brand: sneaker.brand || "Unbekannt",
+          description: sneaker.description,
+          imageUrl: sneaker.imageUrl,
+          creatorId: sneaker.creatorId,
+          createdAt: sneaker.createdAt,
+          avgRating,
+          ratingsCount: ratings.length,
+        };
+      }),
+    );
+
+    return sneakersWithRatings;
   },
 });

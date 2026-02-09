@@ -9,6 +9,7 @@
  */
 
 import type * as actions from "../actions.js";
+import type * as ratings from "../ratings.js";
 import type * as sneakers from "../sneakers.js";
 import type * as users from "../users.js";
 
@@ -20,6 +21,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   actions: typeof actions;
+  ratings: typeof ratings;
   sneakers: typeof sneakers;
   users: typeof users;
 }>;
