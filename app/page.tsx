@@ -1,13 +1,20 @@
 'use client';
 
 import { Authenticated, Unauthenticated } from 'convex/react';
+import { Plus } from 'lucide-react';
 import { Header } from '../components/Header';
 import { SneakerGrid } from '../components/SneakerGrid';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50">
-      <Header />
+      <Header
+        actionButton={{
+          label: 'Add',
+          icon: Plus,
+          href: '/add',
+        }}
+      />
       <main className="container mx-auto p-8">
         <Authenticated>
           <SneakerGrid />

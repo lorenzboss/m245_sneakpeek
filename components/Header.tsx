@@ -2,11 +2,19 @@
 
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { useQuery } from 'convex/react';
-import { LogOut, Plus } from 'lucide-react';
+import { LogOut, type LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { api } from '../convex/_generated/api';
 
-export function Header() {
+interface HeaderProps {
+  actionButton?: {
+    label: string;
+    icon: LucideIcon;
+    href: string;
+  };
+}
+
+export function Header({ actionButton }: HeaderProps) {
   const { user, signOut } = useAuth();
   const convexUser = useQuery(api.users.getCurrentUser);
 
@@ -29,19 +37,21 @@ export function Header() {
                 </span>
               )}
 
-              {/* Add Button */}
-              <Link
-                href="/add"
-                className="bg-slate-900 text-white px-3 md:px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors flex items-center gap-1.5 md:gap-2 text-sm md:text-base shrink-0"
-              >
-                <Plus className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="hidden sm:inline">Add</span>
-              </Link>
+              {/* Action Button */}
+              {actionButton && (
+                <Link
+                  href={actionButton.href}
+                  className="bg-slate-900 text-white px-2 md:px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-colors flex items-center gap-1.5 md:gap-2 text-sm md:text-base shrink-0"
+                >
+                  <actionButton.icon className="w-4 h-4 md:w-5 md:h-5" />
+                  <span className="hidden sm:inline">{actionButton.label}</span>
+                </Link>
+              )}
 
               {/* Logout Button */}
               <button
                 onClick={() => signOut()}
-                className="bg-slate-100 text-slate-700 hover:bg-slate-200 px-3 md:px-4 py-2 md:gap-2 rounded-lg transition-colors gap-1.5 items-center text-sm md:text-base flex shrink-0"
+                className="bg-slate-100 text-slate-700 hover:bg-slate-200 px-2 md:px-3 py-1.5 md:gap-2 rounded-lg transition-colors gap-1.5 items-center text-sm md:text-base flex shrink-0"
               >
                 <LogOut className="w-5 h-5" />
                 <span className="hidden sm:inline">Sign out</span>

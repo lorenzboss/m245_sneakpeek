@@ -4,6 +4,7 @@ import { useMutation } from 'convex/react';
 import { ChevronLeft, Image } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
+import { Header } from '../../components/Header';
 import { api } from '../../convex/_generated/api';
 
 export default function AddSneakerPage() {
@@ -83,24 +84,18 @@ export default function AddSneakerPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200 shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex items-center">
-          <button
-            onClick={() => router.push('/')}
-            className="text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-2"
-          >
-            <ChevronLeft className="w-5 h-5" />
-            Back
-          </button>
-          <h1 className="flex-1 text-2xl font-bold text-center text-slate-900">Add Sneaker</h1>
-          <div className="w-20"></div>
-        </div>
-      </header>
+      <Header
+        actionButton={{
+          label: 'Back',
+          icon: ChevronLeft,
+          href: '/',
+        }}
+      />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+      <main className="container mx-auto px-2 md:px-4 py-8 max-w-4xl">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4  md:p-8">
+          <h2 className="md:text-3xl text-2xl font-bold text-slate-900 mb-4 ">Create New Sneaker</h2>
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Image Upload - Featured */}
             <div>
@@ -277,14 +272,14 @@ export default function AddSneakerPage() {
               <button
                 type="button"
                 onClick={() => router.push('/')}
-                className="flex-1 bg-slate-200 text-slate-900 px-6 py-4 rounded-lg hover:bg-slate-300 transition-colors font-semibold text-lg"
+                className="flex-1 bg-slate-200 text-slate-900 px-4 py-4 rounded-lg hover:bg-slate-300 transition-colors font-semibold text-lg"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isUploading}
-                className="flex-1 bg-slate-900 text-white px-6 py-4 rounded-lg hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg shadow-md"
+                className="flex-1 bg-slate-900 text-white px-4 py-4 rounded-lg hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg shadow-md"
               >
                 {isUploading ? 'Uploading...' : 'Save Sneaker'}
               </button>
