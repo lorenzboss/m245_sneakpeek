@@ -59,9 +59,9 @@ export const listSneakers = query({
       _id: v.id("sneakers"),
       name: v.string(),
       brand: v.string(),
-      description: v.string(),
+      description: v.optional(v.string()),
       imageUrl: v.string(),
-      creatorId: v.id("users"),
+      creatorId: v.optional(v.id("users")),
       createdAt: v.number(),
       avgRating: v.number(),
       ratingsCount: v.number(),
@@ -93,7 +93,7 @@ export const listSneakers = query({
           _id: sneaker._id,
           name: sneaker.name,
           brand: sneaker.brand || "Unbekannt",
-          description: sneaker.description,
+          description: sneaker.description || "",
           imageUrl: sneaker.imageUrl,
           creatorId: sneaker.creatorId,
           createdAt: sneaker.createdAt,
@@ -107,6 +107,60 @@ export const listSneakers = query({
   },
 });
 
+export const getSneakerById = query({
+  args: {
+    sneakerId: v.id("sneakers"),
+  },
+  returns: v.union(
+    v.object({
+      _id: v.id("sneakers"),
+      name: v.string(),
+      brand: v.string(),
+      description: v.optional(v.string()),
+      imageUrl: v.string(),
+      creatorId: v.optional(v.id("users")),
+      createdAt: v.number(),
+      avgRating: v.number(),
+      ratingsCount: v.number(),
+    }),
+    v.null(),
+  ),
+  handler: async (ctx, args) => {
+    const sneaker = await ctx.db.get(args.sneakerId);
+    if (!sneaker) {
+      return null;
+    }
+
+    // Get all ratings for this sneaker
+    const ratings = await ctx.db
+      .query("ratings")
+      .withIndex("by_sneaker", (q) => q.eq("sneakerId", sneaker._id))
+      .collect();
+
+    // Calculate average rating from the 4 criteria (excluding sizing)
+    let avgRating = 0;
+    if (ratings.length > 0) {
+      const totalRating = ratings.reduce((sum, rating) => {
+        const ratingAvg = (rating.ratingDesign + rating.ratingComfort + rating.ratingQuality + rating.ratingValue) / 4;
+        return sum + ratingAvg;
+      }, 0);
+      avgRating = totalRating / ratings.length;
+    }
+
+    return {
+      _id: sneaker._id,
+      name: sneaker.name,
+      brand: sneaker.brand || "Unbekannt",
+      description: sneaker.description || "",
+      imageUrl: sneaker.imageUrl,
+      creatorId: sneaker.creatorId,
+      createdAt: sneaker.createdAt,
+      avgRating,
+      ratingsCount: ratings.length,
+    };
+  },
+});
+
 export const getMySneakers = query({
   args: {},
   returns: v.array(
@@ -114,9 +168,9 @@ export const getMySneakers = query({
       _id: v.id("sneakers"),
       name: v.string(),
       brand: v.string(),
-      description: v.string(),
+      description: v.optional(v.string()),
       imageUrl: v.string(),
-      creatorId: v.id("users"),
+      creatorId: v.optional(v.id("users")),
       createdAt: v.number(),
       avgRating: v.number(),
       ratingsCount: v.number(),
@@ -167,7 +221,7 @@ export const getMySneakers = query({
           _id: sneaker._id,
           name: sneaker.name,
           brand: sneaker.brand || "Unbekannt",
-          description: sneaker.description,
+          description: sneaker.description || "",
           imageUrl: sneaker.imageUrl,
           creatorId: sneaker.creatorId,
           createdAt: sneaker.createdAt,

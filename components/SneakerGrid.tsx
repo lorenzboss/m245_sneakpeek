@@ -3,6 +3,7 @@
 import { useQuery } from "convex/react";
 import { StarIcon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { api } from "../convex/_generated/api";
 
 export function SneakerGrid() {
@@ -31,9 +32,10 @@ export function SneakerGrid() {
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {sneakers.map((sneaker) => {
         return (
-          <div
+          <Link
             key={sneaker._id}
-            className="group overflow-hidden rounded-lg border border-slate-200 bg-white transition-shadow hover:shadow-md"
+            href={`/sneakers/${sneaker._id}`}
+            className="group overflow-hidden rounded-lg border border-slate-200 bg-white transition-all hover:border-slate-300 hover:shadow-lg"
           >
             <div className="relative aspect-square overflow-hidden bg-slate-50">
               <Image
@@ -60,7 +62,7 @@ export function SneakerGrid() {
               )}
               <p className="mt-2 text-xs text-slate-500">{new Date(sneaker.createdAt).toLocaleDateString("de-DE")}</p>
             </div>
-          </div>
+          </Link>
         );
       })}
     </div>

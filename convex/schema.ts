@@ -11,11 +11,18 @@ export default defineSchema({
   sneakers: defineTable({
     name: v.string(),
     brand: v.optional(v.string()),
-    description: v.string(),
+    description: v.optional(v.string()),
     imageUrl: v.string(),
     imageStorageId: v.id("_storage"),
-    creatorId: v.id("users"),
+    creatorId: v.optional(v.id("users")),
     createdAt: v.number(),
+    // Legacy/corrupted fields (should be removed from database)
+    comment: v.optional(v.string()),
+    ratingComfort: v.optional(v.number()),
+    ratingDesign: v.optional(v.number()),
+    ratingQuality: v.optional(v.number()),
+    ratingValue: v.optional(v.number()),
+    userId: v.optional(v.string()),
   }).index("by_creator", ["creatorId"]),
 
   ratings: defineTable({
