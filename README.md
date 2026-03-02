@@ -1,15 +1,3 @@
-# Welcome to your Convex + Next.js + WorkOS AuthKit app
-
-This is a [Convex](https://convex.dev/) project migrated to use WorkOS AuthKit for authentication.
-
-After the initial setup (<2 minutes) you'll have a working full-stack app using:
-
-- Convex as your backend (database, server logic)
-- [React](https://react.dev/) as your frontend (web page interactivity)
-- [Next.js](https://nextjs.org/) for optimized web hosting and page routing
-- [Tailwind](https://tailwindcss.com/) for building great looking accessible UI
-- [WorkOS AuthKit](https://authkit.com/) for authentication
-
 ## Get started
 
 1. Clone this repository and install dependencies:
