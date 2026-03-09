@@ -87,17 +87,21 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
   const isEditMode = existingRating !== null && existingRating !== undefined;
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-lg md:p-8">
-      <div className="mb-8 border-b border-slate-100 pb-6">
-        <h2 className="text-2xl font-bold text-slate-900">{isEditMode ? "Edit Your Rating" : "Rate this Sneaker"}</h2>
-        <p className="mt-2 text-sm text-slate-600">
+    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-lg sm:p-6 md:p-8">
+      <div className="mb-6 border-b border-slate-100 pb-4 sm:mb-8 sm:pb-6">
+        <h2 className="text-xl font-bold text-slate-900 sm:text-2xl">
+          {isEditMode ? "Edit Your Rating" : "Rate this Sneaker"}
+        </h2>
+        <p className="mt-2 text-xs text-slate-600 sm:text-sm">
           {isEditMode ? "Update your rating" : "Share your experience with this sneaker"}
         </p>
       </div>
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
         {/* Rating Grid */}
-        <div className="rounded-lg bg-gradient-to-br from-slate-50 to-slate-100/50 p-6">
-          <h3 className="mb-4 text-sm font-bold tracking-wide text-slate-700 uppercase">Rating Criteria</h3>
+        <div className="rounded-lg bg-gradient-to-br from-slate-50 to-slate-100/50 p-4 sm:p-6">
+          <h3 className="mb-3 text-xs font-bold tracking-wide text-slate-700 uppercase sm:mb-4 sm:text-sm">
+            Rating Criteria
+          </h3>
           <div className="space-y-5">
             <RatingSlider label="Design" value={ratingDesign} onChange={setRatingDesign} />
             <RatingSlider label="Comfort" value={ratingComfort} onChange={setRatingComfort} />
@@ -107,37 +111,42 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
         </div>
 
         {/* Sizing */}
-        <div className="rounded-lg border-2 border-dashed border-slate-200 bg-white p-6">
-          <label className="mb-4 block text-sm font-bold tracking-wide text-slate-700 uppercase">Size Feedback</label>
-          <div className="flex items-center justify-center gap-6">
+        <div className="rounded-lg border-2 border-dashed border-slate-200 bg-white p-4 sm:p-6">
+          <label className="mb-3 block text-xs font-bold tracking-wide text-slate-700 uppercase sm:mb-4 sm:text-sm">
+            Size Feedback
+          </label>
+          <div className="flex items-center justify-center gap-3 sm:gap-6">
             <button
               type="button"
               onClick={() => setSizing(Math.max(-2, sizing - 1))}
-              className="flex size-12 items-center justify-center rounded-full bg-slate-900 text-white transition-all hover:scale-110 hover:bg-slate-800 disabled:opacity-30 disabled:hover:scale-100"
+              className="flex size-10 items-center justify-center rounded-full bg-slate-900 text-white transition-all hover:scale-110 hover:bg-slate-800 disabled:opacity-30 disabled:hover:scale-100 sm:size-12"
               disabled={sizing === -2}
               aria-label="Decrease size"
             >
-              <MinusIcon className="size-5" />
+              <MinusIcon className="size-4 sm:size-5" />
             </button>
-            <div className="min-w-[200px] rounded-lg bg-slate-50 px-6 py-4 text-center">
-              <div className="text-4xl font-bold text-slate-900">{sizing > 0 ? `+${sizing}` : sizing}</div>
-              <div className="mt-1 text-sm font-medium text-slate-600">{SIZING_LABELS[sizing]}</div>
+            <div className="min-w-[140px] rounded-lg bg-slate-50 px-3 py-3 text-center sm:min-w-[200px] sm:px-6 sm:py-4">
+              <div className="text-2xl font-bold text-slate-900 sm:text-4xl">{sizing > 0 ? `+${sizing}` : sizing}</div>
+              <div className="mt-1 text-xs font-medium text-slate-600 sm:text-sm">{SIZING_LABELS[sizing]}</div>
             </div>
             <button
               type="button"
               onClick={() => setSizing(Math.min(2, sizing + 1))}
-              className="flex size-12 items-center justify-center rounded-full bg-slate-900 text-white transition-all hover:scale-110 hover:bg-slate-800 disabled:opacity-30 disabled:hover:scale-100"
+              className="flex size-10 items-center justify-center rounded-full bg-slate-900 text-white transition-all hover:scale-110 hover:bg-slate-800 disabled:opacity-30 disabled:hover:scale-100 sm:size-12"
               disabled={sizing === 2}
               aria-label="Increase size"
             >
-              <PlusIcon className="size-5" />
+              <PlusIcon className="size-4 sm:size-5" />
             </button>
           </div>
         </div>
 
         {/* Comment */}
         <div>
-          <label htmlFor="comment" className="mb-3 block text-sm font-bold tracking-wide text-slate-700 uppercase">
+          <label
+            htmlFor="comment"
+            className="mb-2 block text-xs font-bold tracking-wide text-slate-700 uppercase sm:mb-3 sm:text-sm"
+          >
             Comment <span className="font-normal text-slate-500 normal-case">(Optional)</span>
           </label>
           <textarea
@@ -155,7 +164,7 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-lg bg-slate-900 px-6 py-4 text-lg font-bold text-white shadow-md transition-all hover:bg-slate-800 hover:shadow-lg disabled:opacity-50 disabled:hover:shadow-md"
+          className="w-full rounded-lg bg-slate-900 px-4 py-3 text-base font-bold text-white shadow-md transition-all hover:bg-slate-800 hover:shadow-lg disabled:opacity-50 disabled:hover:shadow-md sm:px-6 sm:py-4 sm:text-lg"
         >
           {isSubmitting ? (isEditMode ? "Updating..." : "Saving...") : isEditMode ? "Update Rating" : "Submit Rating"}
         </button>

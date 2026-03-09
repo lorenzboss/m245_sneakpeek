@@ -27,28 +27,32 @@ export function RatingCard({ rating }: RatingCardProps) {
   // avgRating is now calculated in the backend (business logic)
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="mb-4 flex items-start justify-between">
+    <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+      <div className="mb-3 flex items-start justify-between sm:mb-4">
         <div>
-          <div className="mb-1 font-semibold text-slate-900">{rating.creatorName || "Anonymous User"}</div>
+          <div className="mb-1 text-sm font-semibold text-slate-900 sm:text-base">
+            {rating.creatorName || "Anonymous User"}
+          </div>
           <div className="text-xs text-slate-500">{new Date(rating.createdAt).toLocaleDateString("en-US")}</div>
         </div>
-        <div className="flex items-center gap-1 text-xl font-bold text-slate-900">
-          <StarIcon fill="currentColor" className="size-5 text-yellow-500" />
+        <div className="flex items-center gap-1 text-lg font-bold text-slate-900 sm:text-xl">
+          <StarIcon fill="currentColor" className="size-4 text-yellow-500 sm:size-5" />
           {(rating.avgRating ?? 0).toFixed(1)}
         </div>
       </div>
 
-      {rating.comment && <p className="mb-4 text-slate-700">{rating.comment}</p>}
+      {rating.comment && <p className="mb-3 text-sm text-slate-700 sm:mb-4 sm:text-base">{rating.comment}</p>}
 
-      <div className="grid grid-cols-2 gap-3 text-sm md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2 text-sm sm:gap-3 md:grid-cols-4">
         <CategoryBadge label="Design" value={rating.ratingDesign} />
         <CategoryBadge label="Comfort" value={rating.ratingComfort} />
         <CategoryBadge label="Quality" value={rating.ratingQuality} />
         <CategoryBadge label="Value for Money" value={rating.ratingValue} />
       </div>
 
-      {rating.sizing !== 0 && <div className="mt-3 text-xs text-slate-600">Size: {SIZING_LABELS[rating.sizing]}</div>}
+      {rating.sizing !== 0 && (
+        <div className="mt-2 text-xs text-slate-600 sm:mt-3">Size: {SIZING_LABELS[rating.sizing]}</div>
+      )}
     </div>
   );
 }
