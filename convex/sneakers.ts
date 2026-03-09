@@ -253,3 +253,104 @@ export const getMySneakers = query({
     return sneakersWithRatings;
   },
 });
+
+export const updateSneaker = mutation({
+  args: {
+    sneakerId: v.id("sneakers"),
+    name: v.string(),
+    brand: v.string(),
+    description: v.string(),
+    imageStorageId: v.optional(v.id("_storage")),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_userId", (q) => q.eq("userId", identity.subject))
+      .first();
+
+    if (!user) {
+      throw new Error("User not found in database");
+    }
+
+    const sneaker = await ctx.db.get(args.sneakerId);
+    if (!sneaker) {
+      throw new Error("Sneaker not found");
+    }
+
+    if (sneaker.creatorId !== user._id) {
+      throw new Error("Not authorized to update this sneaker");
+    }
+
+    const updateData: {
+      name: string;
+      brand: string;
+      description: string;
+      imageUrl?: string;
+      imageStorageId?: typeof args.imageStorageId;
+    } = {
+      name: args.name,
+      brand: args.brand,
+      description: args.description,
+    };
+
+    // If a new image is provided, update it
+    if (args.imageStorageId) {
+      const imageUrl = await ctx.storage.getUrl(args.imageStorageId);
+      if (!imageUrl) {
+        throw new Error("Image upload failed");
+      }
+      updateData.imageUrl = imageUrl;
+      updateData.imageStorageId = args.imageStorageId;
+    }
+
+    await ctx.db.patch(args.sneakerId, updateData);
+  },
+});
+
+export const deleteSneaker = mutation({
+  args: {
+    sneakerId: v.id("sneakers"),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_userId", (q) => q.eq("userId", identity.subject))
+      .first();
+
+    if (!user) {
+      throw new Error("User not found in database");
+    }
+
+    const sneaker = await ctx.db.get(args.sneakerId);
+    if (!sneaker) {
+      throw new Error("Sneaker not found");
+    }
+
+    if (sneaker.creatorId !== user._id) {
+      throw new Error("Not authorized to delete this sneaker");
+    }
+
+    // Delete all ratings for this sneaker
+    const ratings = await ctx.db
+      .query("ratings")
+      .withIndex("by_sneaker", (q) => q.eq("sneakerId", args.sneakerId))
+      .collect();
+
+    for (const rating of ratings) {
+      await ctx.db.delete(rating._id);
+    }
+
+    // Delete the sneaker
+    await ctx.db.delete(args.sneakerId);
+  },
+});

@@ -1,10 +1,11 @@
 "use client";
 
-import { Authenticated, Unauthenticated, useQuery } from "convex/react";
-import { ArrowLeft, StarIcon } from "lucide-react";
+import { Authenticated, Unauthenticated, useMutation, useQuery } from "convex/react";
+import { ArrowLeft, Edit2, StarIcon, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import { CategoryRatings } from "../../../components/CategoryRatings";
 import { Header } from "../../../components/Header";
 import { RatingCard } from "../../../components/RatingCard";
@@ -14,10 +15,30 @@ import type { Id } from "../../../convex/_generated/dataModel";
 
 export default function SneakerDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const sneakerId = params.id as Id<"sneakers">;
 
   const sneaker = useQuery(api.sneakers.getSneakerById, { sneakerId });
   const ratings = useQuery(api.ratings.getRatingsForSneaker, { sneakerId });
+  const currentUser = useQuery(api.users.getCurrentUser);
+  const deleteSneaker = useMutation(api.sneakers.deleteSneaker);
+
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const isCreator = currentUser && sneaker && sneaker.creatorId === currentUser._id;
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteSneaker({ sneakerId });
+      router.push("/");
+    } catch (error) {
+      console.error("Error deleting sneaker:", error);
+      setIsDeleting(false);
+      setShowDeleteConfirm(false);
+    }
+  };
 
   if (sneaker === undefined || ratings === undefined) {
     return (
@@ -49,13 +70,63 @@ export default function SneakerDetailPage() {
     <div className="min-h-screen bg-slate-50">
       <Header />
       <main className="container mx-auto p-8">
-        <Link
-          href="/"
-          className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition-colors hover:text-slate-900"
-        >
-          <ArrowLeft className="size-4" />
-          Zurück zur Übersicht
-        </Link>
+        <div className="mb-6 flex items-center justify-between">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition-colors hover:text-slate-900"
+          >
+            <ArrowLeft className="size-4" />
+            Zurück zur Übersicht
+          </Link>
+
+          {isCreator && (
+            <div className="flex gap-2">
+              <Link
+                href={`/sneakers/${sneakerId}/edit`}
+                className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-slate-800"
+              >
+                <Edit2 className="size-4" />
+                Bearbeiten
+              </Link>
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="inline-flex items-center gap-2 rounded-lg border border-red-600 bg-white px-4 py-2 text-sm font-semibold text-red-600 shadow-sm transition-colors hover:bg-red-50"
+              >
+                <Trash2 className="size-4" />
+                Löschen
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteConfirm && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+            <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+              <h3 className="mb-4 text-xl font-bold text-slate-900">Sneaker löschen?</h3>
+              <p className="mb-6 text-slate-600">
+                Möchtest du diesen Sneaker wirklich löschen? Alle Bewertungen werden ebenfalls gelöscht. Diese Aktion
+                kann nicht rückgängig gemacht werden.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className="flex-1 rounded-lg bg-red-600 px-4 py-2 font-semibold text-white shadow-sm transition-colors hover:bg-red-700 disabled:bg-red-400"
+                >
+                  {isDeleting ? "Wird gelöscht..." : "Ja, löschen"}
+                </button>
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  disabled={isDeleting}
+                  className="flex-1 rounded-lg border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-900 shadow-sm transition-colors hover:bg-slate-50 disabled:bg-slate-100"
+                >
+                  Abbrechen
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Sneaker Info Card */}
         <div className="mb-8 overflow-hidden rounded-lg bg-white shadow-md">
