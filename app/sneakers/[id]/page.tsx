@@ -69,14 +69,70 @@ export default function SneakerDetailPage() {
               <p className="mb-4 text-xl font-semibold text-slate-600">{sneaker.brand}</p>
               {sneaker.description && <p className="mb-6 text-slate-700">{sneaker.description}</p>}
               {sneaker.ratingsCount > 0 && (
-                <div className="inline-flex w-fit items-center gap-3 rounded-lg bg-slate-50 px-4 py-3">
-                  <div className="flex items-center gap-2 text-3xl font-bold text-slate-900">
-                    <StarIcon fill="currentColor" className="size-8 text-yellow-500" />
-                    {sneaker.avgRating.toFixed(1)}
+                <div className="space-y-3">
+                  <div className="inline-flex w-fit items-center gap-3 rounded-lg bg-slate-50 px-4 py-3">
+                    <div className="flex items-center gap-2 text-3xl font-bold text-slate-900">
+                      <StarIcon fill="currentColor" className="size-8 text-yellow-500" />
+                      {sneaker.avgRating.toFixed(1)}
+                    </div>
+                    <span className="text-sm text-slate-500">
+                      ({sneaker.ratingsCount} {sneaker.ratingsCount === 1 ? "Bewertung" : "Bewertungen"})
+                    </span>
                   </div>
-                  <span className="text-sm text-slate-500">
-                    ({sneaker.ratingsCount} {sneaker.ratingsCount === 1 ? "Bewertung" : "Bewertungen"})
-                  </span>
+                  <div className="rounded-lg bg-slate-50 px-4 py-3 space-y-2 text-sm">
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="font-medium text-slate-700">Design:</span>
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <StarIcon
+                            key={star}
+                            fill={star <= Math.round(sneaker.avgDesign) ? "currentColor" : "none"}
+                            className="size-4 text-yellow-500"
+                          />
+                        ))}
+                        <span className="ml-2 font-semibold text-slate-900">{sneaker.avgDesign.toFixed(1)}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="font-medium text-slate-700">Komfort:</span>
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <StarIcon
+                            key={star}
+                            fill={star <= Math.round(sneaker.avgComfort) ? "currentColor" : "none"}
+                            className="size-4 text-yellow-500"
+                          />
+                        ))}
+                        <span className="ml-2 font-semibold text-slate-900">{sneaker.avgComfort.toFixed(1)}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="font-medium text-slate-700">Qualität:</span>
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <StarIcon
+                            key={star}
+                            fill={star <= Math.round(sneaker.avgQuality) ? "currentColor" : "none"}
+                            className="size-4 text-yellow-500"
+                          />
+                        ))}
+                        <span className="ml-2 font-semibold text-slate-900">{sneaker.avgQuality.toFixed(1)}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="font-medium text-slate-700">Preis-Leistung:</span>
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <StarIcon
+                            key={star}
+                            fill={star <= Math.round(sneaker.avgValue) ? "currentColor" : "none"}
+                            className="size-4 text-yellow-500"
+                          />
+                        ))}
+                        <span className="ml-2 font-semibold text-slate-900">{sneaker.avgValue.toFixed(1)}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
