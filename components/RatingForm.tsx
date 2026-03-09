@@ -11,11 +11,11 @@ interface RatingFormProps {
 }
 
 const SIZING_LABELS: Record<number, string> = {
-  "-2": "Viel zu klein",
-  "-1": "Etwas klein",
-  "0": "Perfekt",
-  "1": "Etwas groß",
-  "2": "Viel zu groß",
+  "-2": "Way too small",
+  "-1": "Slightly small",
+  "0": "Perfect",
+  "1": "Slightly large",
+  "2": "Way too large",
 };
 
 export function RatingForm({ sneakerId }: RatingFormProps) {
@@ -76,7 +76,7 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
       router.push("/");
     } catch (error) {
       console.error("Error saving rating:", error);
-      setError("Fehler beim Speichern der Bewertung. Bitte versuche es erneut.");
+      setError("Error saving rating. Please try again.");
       setIsSubmitting(false);
     }
   };
@@ -86,35 +86,33 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-lg md:p-8">
       <div className="mb-8 border-b border-slate-100 pb-6">
-        <h2 className="text-2xl font-bold text-slate-900">
-          {isEditMode ? "Deine Bewertung bearbeiten" : "Bewerte diesen Sneaker"}
-        </h2>
+        <h2 className="text-2xl font-bold text-slate-900">{isEditMode ? "Edit Your Rating" : "Rate this Sneaker"}</h2>
         <p className="mt-2 text-sm text-slate-600">
-          {isEditMode ? "Aktualisiere deine Bewertung" : "Teile deine Erfahrungen mit diesem Sneaker"}
+          {isEditMode ? "Update your rating" : "Share your experience with this sneaker"}
         </p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Rating Grid */}
         <div className="rounded-lg bg-gradient-to-br from-slate-50 to-slate-100/50 p-6">
-          <h3 className="mb-4 text-sm font-bold tracking-wide text-slate-700 uppercase">Bewertungskriterien</h3>
+          <h3 className="mb-4 text-sm font-bold tracking-wide text-slate-700 uppercase">Rating Criteria</h3>
           <div className="space-y-5">
             <RatingSlider label="Design" value={ratingDesign} onChange={setRatingDesign} />
-            <RatingSlider label="Komfort" value={ratingComfort} onChange={setRatingComfort} />
-            <RatingSlider label="Qualität" value={ratingQuality} onChange={setRatingQuality} />
-            <RatingSlider label="Preis-Leistung" value={ratingValue} onChange={setRatingValue} />
+            <RatingSlider label="Comfort" value={ratingComfort} onChange={setRatingComfort} />
+            <RatingSlider label="Quality" value={ratingQuality} onChange={setRatingQuality} />
+            <RatingSlider label="Value for Money" value={ratingValue} onChange={setRatingValue} />
           </div>
         </div>
 
         {/* Sizing */}
         <div className="rounded-lg border-2 border-dashed border-slate-200 bg-white p-6">
-          <label className="mb-4 block text-sm font-bold tracking-wide text-slate-700 uppercase">Größenangabe</label>
+          <label className="mb-4 block text-sm font-bold tracking-wide text-slate-700 uppercase">Size Feedback</label>
           <div className="flex items-center justify-center gap-6">
             <button
               type="button"
               onClick={() => setSizing(Math.max(-2, sizing - 1))}
               className="flex size-12 items-center justify-center rounded-full bg-slate-900 text-white transition-all hover:scale-110 hover:bg-slate-800 disabled:opacity-30 disabled:hover:scale-100"
               disabled={sizing === -2}
-              aria-label="Größe verkleinern"
+              aria-label="Decrease size"
             >
               <MinusIcon className="size-5" />
             </button>
@@ -127,7 +125,7 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
               onClick={() => setSizing(Math.min(2, sizing + 1))}
               className="flex size-12 items-center justify-center rounded-full bg-slate-900 text-white transition-all hover:scale-110 hover:bg-slate-800 disabled:opacity-30 disabled:hover:scale-100"
               disabled={sizing === 2}
-              aria-label="Größe vergrößern"
+              aria-label="Increase size"
             >
               <PlusIcon className="size-5" />
             </button>
@@ -137,7 +135,7 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
         {/* Comment */}
         <div>
           <label htmlFor="comment" className="mb-3 block text-sm font-bold tracking-wide text-slate-700 uppercase">
-            Kommentar <span className="font-normal text-slate-500 normal-case">(Optional)</span>
+            Comment <span className="font-normal text-slate-500 normal-case">(Optional)</span>
           </label>
           <textarea
             id="comment"
@@ -145,7 +143,7 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
             onChange={(e) => setComment(e.target.value)}
             rows={4}
             className="w-full rounded-lg border-2 border-slate-200 px-4 py-3 text-slate-900 transition-all focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 focus:outline-none"
-            placeholder="Teile deine Meinung zu diesem Sneaker..."
+            placeholder="Share your thoughts about this sneaker..."
           />
         </div>
 
@@ -156,13 +154,7 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
           disabled={isSubmitting}
           className="w-full rounded-lg bg-slate-900 px-6 py-4 text-lg font-bold text-white shadow-md transition-all hover:bg-slate-800 hover:shadow-lg disabled:opacity-50 disabled:hover:shadow-md"
         >
-          {isSubmitting
-            ? isEditMode
-              ? "Wird aktualisiert..."
-              : "Wird gespeichert..."
-            : isEditMode
-              ? "Bewertung aktualisieren"
-              : "Bewertung abgeben"}
+          {isSubmitting ? (isEditMode ? "Updating..." : "Saving...") : isEditMode ? "Update Rating" : "Submit Rating"}
         </button>
       </form>
     </div>

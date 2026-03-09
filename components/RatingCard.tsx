@@ -17,10 +17,10 @@ interface RatingCardProps {
 }
 
 const SIZING_LABELS: Record<number, string> = {
-  "-2": "Viel zu klein",
-  "-1": "Etwas klein",
-  "1": "Etwas groß",
-  "2": "Viel zu groß",
+  "-2": "Way too small",
+  "-1": "Slightly small",
+  "1": "Slightly large",
+  "2": "Way too large",
 };
 
 export function RatingCard({ rating }: RatingCardProps) {
@@ -30,8 +30,8 @@ export function RatingCard({ rating }: RatingCardProps) {
     <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
       <div className="mb-4 flex items-start justify-between">
         <div>
-          <div className="mb-1 font-semibold text-slate-900">{rating.creatorName || "Anonymer Nutzer"}</div>
-          <div className="text-xs text-slate-500">{new Date(rating.createdAt).toLocaleDateString("de-DE")}</div>
+          <div className="mb-1 font-semibold text-slate-900">{rating.creatorName || "Anonymous User"}</div>
+          <div className="text-xs text-slate-500">{new Date(rating.createdAt).toLocaleDateString("en-US")}</div>
         </div>
         <div className="flex items-center gap-1 text-xl font-bold text-slate-900">
           <StarIcon fill="currentColor" className="size-5 text-yellow-500" />
@@ -43,12 +43,12 @@ export function RatingCard({ rating }: RatingCardProps) {
 
       <div className="grid grid-cols-2 gap-3 text-sm md:grid-cols-4">
         <CategoryBadge label="Design" value={rating.ratingDesign} />
-        <CategoryBadge label="Komfort" value={rating.ratingComfort} />
-        <CategoryBadge label="Qualität" value={rating.ratingQuality} />
-        <CategoryBadge label="Preis-Leistung" value={rating.ratingValue} />
+        <CategoryBadge label="Comfort" value={rating.ratingComfort} />
+        <CategoryBadge label="Quality" value={rating.ratingQuality} />
+        <CategoryBadge label="Value for Money" value={rating.ratingValue} />
       </div>
 
-      {rating.sizing !== 0 && <div className="mt-3 text-xs text-slate-600">Größe: {SIZING_LABELS[rating.sizing]}</div>}
+      {rating.sizing !== 0 && <div className="mt-3 text-xs text-slate-600">Size: {SIZING_LABELS[rating.sizing]}</div>}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { Authenticated, Unauthenticated, useMutation, useQuery } from "convex/react";
-import { ArrowLeft, Edit2, StarIcon, Trash2 } from "lucide-react";
+import { ChevronLeft, Edit2, StarIcon, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -43,7 +43,13 @@ export default function SneakerDetailPage() {
   if (sneaker === undefined || ratings === undefined) {
     return (
       <div className="min-h-screen bg-slate-50">
-        <Header />
+        <Header
+          actionButton={{
+            label: "Back",
+            icon: ChevronLeft,
+            href: "/",
+          }}
+        />
         <main className="container mx-auto p-8">
           <div className="flex min-h-100 items-center justify-center">
             <div className="text-lg text-slate-600">Loading...</div>
@@ -56,10 +62,16 @@ export default function SneakerDetailPage() {
   if (sneaker === null) {
     return (
       <div className="min-h-screen bg-slate-50">
-        <Header />
+        <Header
+          actionButton={{
+            label: "Back",
+            icon: ChevronLeft,
+            href: "/",
+          }}
+        />
         <main className="container mx-auto p-8">
           <div className="flex min-h-100 items-center justify-center">
-            <div className="text-lg text-slate-600">Sneaker nicht gefunden</div>
+            <div className="text-lg text-slate-600">Sneaker not found</div>
           </div>
         </main>
       </div>
@@ -68,45 +80,41 @@ export default function SneakerDetailPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Header />
+      <Header
+        actionButton={{
+          label: "Back",
+          icon: ChevronLeft,
+          href: "/",
+        }}
+      />
       <main className="container mx-auto p-8">
-        <div className="mb-6 flex items-center justify-between">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition-colors hover:text-slate-900"
-          >
-            <ArrowLeft className="size-4" />
-            Zurück zur Übersicht
-          </Link>
-
-          {isCreator && (
-            <div className="flex gap-2">
-              <Link
-                href={`/sneakers/${sneakerId}/edit`}
-                className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-slate-800"
-              >
-                <Edit2 className="size-4" />
-                Bearbeiten
-              </Link>
-              <button
-                onClick={() => setShowDeleteConfirm(true)}
-                className="inline-flex items-center gap-2 rounded-lg border border-red-600 bg-white px-4 py-2 text-sm font-semibold text-red-600 shadow-sm transition-colors hover:bg-red-50"
-              >
-                <Trash2 className="size-4" />
-                Löschen
-              </button>
-            </div>
-          )}
-        </div>
+        {isCreator && (
+          <div className="mb-6 flex justify-end gap-2">
+            <Link
+              href={`/sneakers/${sneakerId}/edit`}
+              className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-slate-800"
+            >
+              <Edit2 className="size-4" />
+              Edit
+            </Link>
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="inline-flex items-center gap-2 rounded-lg border border-red-600 bg-white px-4 py-2 text-sm font-semibold text-red-600 shadow-sm transition-colors hover:bg-red-50"
+            >
+              <Trash2 className="size-4" />
+              Delete
+            </button>
+          </div>
+        )}
 
         {/* Delete Confirmation Modal */}
         {showDeleteConfirm && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
             <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
-              <h3 className="mb-4 text-xl font-bold text-slate-900">Sneaker löschen?</h3>
+              <h3 className="mb-4 text-xl font-bold text-slate-900">Delete Sneaker?</h3>
               <p className="mb-6 text-slate-600">
-                Möchtest du diesen Sneaker wirklich löschen? Alle Bewertungen werden ebenfalls gelöscht. Diese Aktion
-                kann nicht rückgängig gemacht werden.
+                Do you really want to delete this sneaker? All ratings will also be deleted. This action cannot be
+                undone.
               </p>
               <div className="flex gap-3">
                 <button
@@ -114,14 +122,14 @@ export default function SneakerDetailPage() {
                   disabled={isDeleting}
                   className="flex-1 rounded-lg bg-red-600 px-4 py-2 font-semibold text-white shadow-sm transition-colors hover:bg-red-700 disabled:bg-red-400"
                 >
-                  {isDeleting ? "Wird gelöscht..." : "Ja, löschen"}
+                  {isDeleting ? "Deleting..." : "Yes, delete"}
                 </button>
                 <button
                   onClick={() => setShowDeleteConfirm(false)}
                   disabled={isDeleting}
                   className="flex-1 rounded-lg border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-900 shadow-sm transition-colors hover:bg-slate-50 disabled:bg-slate-100"
                 >
-                  Abbrechen
+                  Cancel
                 </button>
               </div>
             </div>
@@ -149,7 +157,7 @@ export default function SneakerDetailPage() {
                       {(sneaker.avgRating ?? 0).toFixed(1)}
                     </div>
                     <span className="text-sm text-slate-500">
-                      ({sneaker.ratingsCount} {sneaker.ratingsCount === 1 ? "Bewertung" : "Bewertungen"})
+                      ({sneaker.ratingsCount} {sneaker.ratingsCount === 1 ? "Rating" : "Ratings"})
                     </span>
                   </div>
                   <CategoryRatings
@@ -176,11 +184,11 @@ export default function SneakerDetailPage() {
             <Unauthenticated>
               <div className="lg:sticky lg:top-8">
                 <div className="rounded-xl border border-slate-200 bg-white p-8 shadow-lg">
-                  <h2 className="mb-3 text-2xl font-bold text-slate-900">Bewerte diesen Sneaker</h2>
-                  <p className="mb-6 text-slate-600">Du musst angemeldet sein, um eine Bewertung abzugeben.</p>
+                  <h2 className="mb-3 text-2xl font-bold text-slate-900">Rate this Sneaker</h2>
+                  <p className="mb-6 text-slate-600">You must be signed in to submit a rating.</p>
                   <Link href="/sign-in">
                     <button className="w-full rounded-lg bg-slate-900 px-6 py-4 text-lg font-bold text-white shadow-md transition-all hover:bg-slate-800 hover:shadow-lg">
-                      Anmelden
+                      Sign In
                     </button>
                   </Link>
                 </div>
@@ -193,7 +201,7 @@ export default function SneakerDetailPage() {
             {ratings.length > 0 ? (
               <div>
                 <h2 className="mb-6 text-2xl font-bold text-slate-900">
-                  Bewertungen <span className="text-slate-500">({ratings.length})</span>
+                  Ratings <span className="text-slate-500">({ratings.length})</span>
                 </h2>
                 <div className="space-y-4">
                   {ratings.map((rating) => (
@@ -203,8 +211,8 @@ export default function SneakerDetailPage() {
               </div>
             ) : (
               <div className="rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 p-12 text-center">
-                <p className="text-lg text-slate-600">Noch keine Bewertungen vorhanden</p>
-                <p className="mt-2 text-sm text-slate-500">Sei der Erste, der diesen Sneaker bewertet!</p>
+                <p className="text-lg text-slate-600">No ratings available yet</p>
+                <p className="mt-2 text-sm text-slate-500">Be the first to rate this sneaker!</p>
               </div>
             )}
           </div>

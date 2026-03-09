@@ -1,9 +1,8 @@
 "use client";
 
 import { useMutation, useQuery } from "convex/react";
-import { ArrowLeft, ImageIcon } from "lucide-react";
+import { ChevronLeft, ImageIcon } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { Header } from "../../../../components/Header";
@@ -70,7 +69,7 @@ export default function EditSneakerPage() {
         <Header />
         <main className="container mx-auto p-8">
           <div className="flex min-h-100 items-center justify-center">
-            <div className="text-lg text-slate-600">Sneaker nicht gefunden</div>
+            <div className="text-lg text-slate-600">Sneaker not found</div>
           </div>
         </main>
       </div>
@@ -83,7 +82,7 @@ export default function EditSneakerPage() {
         <Header />
         <main className="container mx-auto p-8">
           <div className="flex min-h-100 items-center justify-center">
-            <div className="text-lg text-slate-600">Du bist nicht berechtigt, diesen Sneaker zu bearbeiten</div>
+            <div className="text-lg text-slate-600">You are not authorized to edit this sneaker</div>
           </div>
         </main>
       </div>
@@ -102,7 +101,7 @@ export default function EditSneakerPage() {
     setError("");
 
     if (!name.trim() || !brand.trim()) {
-      setError("Name und Marke sind erforderlich");
+      setError("Name and brand are required");
       return;
     }
 
@@ -120,7 +119,7 @@ export default function EditSneakerPage() {
         });
 
         if (!result.ok) {
-          throw new Error("Bild-Upload fehlgeschlagen");
+          throw new Error("Image upload failed");
         }
 
         const { storageId } = await result.json();
@@ -136,127 +135,152 @@ export default function EditSneakerPage() {
       });
       router.push(`/sneakers/${sneakerId}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Fehler beim Aktualisieren");
+      setError(err instanceof Error ? err.message : "Error updating");
       setIsSubmitting(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Header />
-      <main className="container mx-auto max-w-2xl p-8">
-        <Link
-          href={`/sneakers/${sneakerId}`}
-          className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition-colors hover:text-slate-900"
-        >
-          <ArrowLeft className="size-4" />
-          Zurück
-        </Link>
+      <Header
+        actionButton={{
+          label: "Back",
+          icon: ChevronLeft,
+          href: `/sneakers/${sneakerId}`,
+        }}
+      />
 
-        <div className="rounded-lg bg-white p-8 shadow-md">
-          <h1 className="mb-6 text-3xl font-bold text-slate-900">Sneaker bearbeiten</h1>
-
+      {/* Main Content */}
+      <main className="container mx-auto max-w-3xl px-4 py-6 md:py-8">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-10">
+          <h2 className="mb-6 text-2xl font-bold text-slate-900">Edit Sneaker</h2>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Image Upload Section */}
+            {/* Image Upload - Featured */}
             <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-700">Bild</label>
-              <div className="space-y-3">
-                {/* Current or Preview Image */}
-                <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-slate-100">
-                  {imagePreview ? (
-                    <img src={imagePreview} alt="Vorschau" className="h-full w-full object-cover" />
-                  ) : sneaker ? (
-                    <Image src={sneaker.imageUrl} alt={sneaker.name} fill className="object-cover" />
-                  ) : (
-                    <div className="flex h-full items-center justify-center">
-                      <ImageIcon className="size-12 text-slate-400" />
+              <label className="mb-2 block text-sm font-medium text-slate-700">Sneaker Image</label>
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="group cursor-pointer overflow-hidden rounded-xl border-2 border-dashed border-slate-300 bg-slate-50/50 transition-all hover:border-slate-400 hover:bg-slate-100/50"
+              >
+                {imagePreview ? (
+                  <div className="relative flex h-64 w-full items-center justify-center bg-slate-50 p-6">
+                    {/* Using native img instead of Next.js Image for local preview (data URL) before upload */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="max-h-full max-w-full rounded-lg object-contain shadow-sm"
+                    />
+                    <div className="absolute inset-0 bg-black opacity-0 transition-opacity group-hover:opacity-5" />
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                      <span className="rounded-md bg-slate-900/90 px-3 py-1.5 text-xs font-medium text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+                        Click to change
+                      </span>
                     </div>
-                  )}
-                </div>
-
-                {/* Upload Button */}
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleImageChange}
-                  accept="image/*"
-                  className="hidden"
-                />
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-900 transition-colors hover:bg-slate-50"
-                >
-                  {imagePreview ? "Anderes Bild wählen" : "Neues Bild hochladen"}
-                </button>
-                {!imagePreview && (
-                  <p className="text-sm text-slate-500">
-                    Optional: Lade ein neues Bild hoch, um das aktuelle zu ersetzen
-                  </p>
+                  </div>
+                ) : sneaker ? (
+                  <div className="relative flex h-64 w-full items-center justify-center bg-slate-50 p-6">
+                    <Image
+                      src={sneaker.imageUrl}
+                      alt={sneaker.name}
+                      width={256}
+                      height={256}
+                      className="max-h-full max-w-full rounded-lg object-contain shadow-sm"
+                    />
+                    <div className="absolute inset-0 bg-black opacity-0 transition-opacity group-hover:opacity-5" />
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                      <span className="rounded-md bg-slate-900/90 px-3 py-1.5 text-xs font-medium text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+                        Click to change
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center gap-3 py-10 text-slate-500">
+                    <ImageIcon className="h-12 w-12" />
+                    <span className="text-sm font-medium">Click to upload an image</span>
+                    <span className="text-xs text-slate-400">PNG, JPG, WEBP, AVIF up to 10MB</span>
+                  </div>
                 )}
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/jpg,image/webp,image/avif"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </div>
+
+            {/* Name and Brand */}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div>
+                <label htmlFor="name" className="mb-2 block text-sm font-medium text-slate-700">
+                  Name
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Air Jordan 1"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition-all placeholder:text-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-200 focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="brand" className="mb-2 block text-sm font-medium text-slate-700">
+                  Brand
+                </label>
+                <input
+                  id="brand"
+                  type="text"
+                  value={brand}
+                  onChange={(e) => setBrand(e.target.value)}
+                  placeholder="e.g. Nike"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition-all placeholder:text-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-200 focus:outline-none"
+                  required
+                />
               </div>
             </div>
 
+            {/* Description */}
             <div>
-              <label htmlFor="name" className="mb-2 block text-sm font-semibold text-slate-700">
-                Name *
-              </label>
-              <input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 focus:border-slate-500 focus:ring-2 focus:ring-slate-500/20 focus:outline-none"
-                placeholder="z.B. Air Jordan 1 Retro High"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="brand" className="mb-2 block text-sm font-semibold text-slate-700">
-                Marke *
-              </label>
-              <input
-                id="brand"
-                type="text"
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 focus:border-slate-500 focus:ring-2 focus:ring-slate-500/20 focus:outline-none"
-                placeholder="z.B. Nike"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="description" className="mb-2 block text-sm font-semibold text-slate-700">
-                Beschreibung
+              <label htmlFor="description" className="mb-2 block text-sm font-medium text-slate-700">
+                Description
               </label>
               <textarea
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                placeholder="Describe your sneakers..."
                 rows={4}
-                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 focus:border-slate-500 focus:ring-2 focus:ring-slate-500/20 focus:outline-none"
-                placeholder="Beschreibe den Sneaker..."
+                className="w-full resize-none rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition-all placeholder:text-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-200 focus:outline-none"
+                required
               />
             </div>
 
-            {error && <div className="rounded-lg bg-red-50 p-4 text-sm text-red-600">{error}</div>}
+            {/* Error Message */}
+            {error && (
+              <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600">{error}</div>
+            )}
 
-            <div className="flex gap-3">
+            {/* Submit Button */}
+            <div className="flex flex-col gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={() => router.push(`/sneakers/${sneakerId}`)}
+                className="w-full rounded-lg bg-slate-100 px-6 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-200 sm:w-auto"
+              >
+                Cancel
+              </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 rounded-lg bg-slate-900 px-4 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-slate-800 disabled:bg-slate-400"
+                className="w-full rounded-lg bg-slate-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
               >
-                {isSubmitting ? "Speichern..." : "Speichern"}
+                {isSubmitting ? "Saving..." : "Save Changes"}
               </button>
-              <Link
-                href={`/sneakers/${sneakerId}`}
-                className="flex-1 rounded-lg border border-slate-300 bg-white px-4 py-3 text-center font-semibold text-slate-900 shadow-sm transition-colors hover:bg-slate-50"
-              >
-                Abbrechen
-              </Link>
             </div>
           </form>
         </div>

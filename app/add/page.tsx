@@ -39,7 +39,7 @@ export default function AddSneakerPage() {
     setError("");
 
     if (!name || !brand || !description || !image) {
-      setError("Bitte fülle alle Felder aus und wähle ein Bild aus");
+      setError("Please fill in all fields and select an image");
       return;
     }
 
@@ -54,7 +54,7 @@ export default function AddSneakerPage() {
       });
 
       if (!result.ok) {
-        throw new Error("Upload fehlgeschlagen");
+        throw new Error("Upload failed");
       }
 
       const { storageId } = await result.json();
@@ -69,7 +69,7 @@ export default function AddSneakerPage() {
       router.push("/");
     } catch (error) {
       console.error("Error uploading sneaker:", error);
-      setError("Upload-Fehler. Bitte versuche es erneut.");
+      setError("Upload error. Please try again.");
       setIsUploading(false);
     }
   };

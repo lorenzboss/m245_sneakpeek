@@ -60,7 +60,7 @@ export function SneakerGrid() {
                   {sneaker.ratingsCount} {sneaker.ratingsCount === 1 ? "Rating" : "Ratings"}
                 </p>
               )}
-              <p className="mt-2 text-xs text-slate-500">{new Date(sneaker.createdAt).toLocaleDateString("de-DE")}</p>
+              <p className="mt-2 text-xs text-slate-500">{new Date(sneaker.createdAt).toLocaleDateString("en-US")}</p>
             </div>
           </Link>
         );

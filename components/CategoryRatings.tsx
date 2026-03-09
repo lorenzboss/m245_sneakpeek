@@ -15,15 +15,15 @@ export function CategoryRatings({ avgDesign, avgComfort, avgQuality, avgValue }:
         <StarRating rating={avgDesign} size="sm" />
       </div>
       <div className="flex items-center justify-between gap-4">
-        <span className="font-medium text-slate-700">Komfort:</span>
+        <span className="font-medium text-slate-700">Comfort:</span>
         <StarRating rating={avgComfort} size="sm" />
       </div>
       <div className="flex items-center justify-between gap-4">
-        <span className="font-medium text-slate-700">Qualität:</span>
+        <span className="font-medium text-slate-700">Quality:</span>
         <StarRating rating={avgQuality} size="sm" />
       </div>
       <div className="flex items-center justify-between gap-4">
-        <span className="font-medium text-slate-700">Preis-Leistung:</span>
+        <span className="font-medium text-slate-700">Value for Money:</span>
         <StarRating rating={avgValue} size="sm" />
       </div>
     </div>
