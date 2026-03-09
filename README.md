@@ -13,6 +13,7 @@ Eine moderne Web-Plattform für Sneaker-Enthusiasten zum Bewerten, Entdecken und
 SneakPeak ist eine Community-getriebene Bewertungsplattform, auf der Nutzer Sneakers hochladen, detailliert bewerten und die Meinungen anderer einsehen können. Die Anwendung bietet ein intuitives Interface mit Echtzeit-Updates und umfassenden Bewertungskategorien.
 
 ### 🎯 Hauptfunktionen auf einen Blick
+
 - ✅ Sneakers hochladen und verwalten
 - ⭐ 4-Kategorien Bewertungssystem (Design, Komfort, Qualität, Preis-Leistung)
 - 👥 Community-Durchschnittswerte und Feedback
@@ -35,7 +36,6 @@ SneakPeak ist eine Community-getriebene Bewertungsplattform, auf der Nutzer Snea
     - 💰 Preis-Leistung
   - Sizing-Feedback (-2 bis +2: zu klein bis zu groß)
   - Textkommentare für detailliertes Feedback
-  
 - **Community-Features**
   - Durchschnittswerte pro Kategorie anzeigen
   - Alle Community-Bewertungen einsehen
@@ -107,6 +107,7 @@ npx convex dev
 ```
 
 Dies wird:
+
 - Deine Convex-Deployment erstellen
 - Die Convex URL automatisch zu `.env.local` hinzufügen
 - Das Convex Dashboard öffnen
@@ -177,10 +178,12 @@ m245_sneakpeek/
 Das Projekt folgt modernen Best Practices:
 
 ### Komponenten-Architektur
+
 - **Modulare Komponenten**: UI-Elemente sind in wiederverwendbare Komponenten aufgeteilt
 - **Single Responsibility**: Jede Komponen in Convex:
 
 ### **users**
+
 ```typescript
 {
   userId: string,        // WorkOS User ID
@@ -190,6 +193,7 @@ Das Projekt folgt modernen Best Practices:
 ```
 
 ### **sneakers**
+
 ```typescript
 {
   name: string,          // Sneaker Name
@@ -203,6 +207,7 @@ Das Projekt folgt modernen Best Practices:
 ```
 
 ### **ratings**
+
 ```typescript
 {
   sneakerId: Id,         // Referenz zu sneakers
@@ -218,6 +223,7 @@ Das Projekt folgt modernen Best Practices:
 ```
 
 ### Indizes
+
 - `users`: by_userId
 - `sneakers`: by_creator
 - `ratings`: by_sneaker, by_creator
@@ -228,6 +234,7 @@ Das Projekt folgt modernen Best Practices:
 - `RatingForm`: Vollständiges Formular mit Validierung
 
 ### Backend (Convex)
+
 - **Type-Safe Queries**: Automatisch generierte TypeScript Types
 - **Echtzeit-Sync**: Reaktive Daten ohne manuelle Polling
 - **Optimistic Updates**: Sofortiges UI-Feedback
@@ -270,14 +277,17 @@ Convex wird automatisch mit deinem Production-Environment verbunden.
 ## 🐛 Troubleshooting
 
 ### Authentifizierung funktioniert nicht
+
 - Überprüfe, ob die WorkOS Redirect URI korrekt konfiguriert ist
 - Stelle sicher, dass `WORKOS_COOKIE_PASSWORD` mindestens 32 Zeichen hat
 
 ### Bilder werden nicht angezeigt
+
 - Prüfe die Convex Storage Konfiguration
 - Stelle sicher, dass `generateUploadUrl` korrekt funktioniert
 
 ### Convex Verbindungsfehler
+
 - Führe `npx convex dev` aus, um die Verbindung wiederherzustellen
 - Überprüfe, ob die `CONVEX_URL` in `.env.local` korrekt ist
 

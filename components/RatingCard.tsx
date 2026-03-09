@@ -47,9 +47,7 @@ export function RatingCard({ rating }: RatingCardProps) {
         <CategoryBadge label="Preis-Leistung" value={rating.ratingValue} />
       </div>
 
-      {rating.sizing !== 0 && (
-        <div className="mt-3 text-xs text-slate-600">Größe: {SIZING_LABELS[rating.sizing]}</div>
-      )}
+      {rating.sizing !== 0 && <div className="mt-3 text-xs text-slate-600">Größe: {SIZING_LABELS[rating.sizing]}</div>}
     </div>
   );
 }
