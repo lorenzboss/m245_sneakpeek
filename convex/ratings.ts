@@ -89,6 +89,7 @@ export const addRating = mutation({
 
 /**
  * Get all ratings for a specific sneaker
+ * Includes calculated average rating (business logic in backend)
  */
 export const getRatingsForSneaker = query({
   args: {
@@ -101,10 +102,13 @@ export const getRatingsForSneaker = query({
       .order("desc")
       .collect();
 
-    // Enrich ratings with user names
+    // Enrich ratings with user names and calculated average
     const ratingsWithUserNames = await Promise.all(
       ratings.map(async (rating) => {
         const user = await ctx.db.get(rating.creatorId);
+        // Business logic: Calculate average rating from 4 categories
+        const avgRating = (rating.ratingDesign + rating.ratingComfort + rating.ratingQuality + rating.ratingValue) / 4;
+
         return {
           _id: rating._id,
           sneakerId: rating.sneakerId,
@@ -115,6 +119,7 @@ export const getRatingsForSneaker = query({
           ratingComfort: rating.ratingComfort,
           ratingQuality: rating.ratingQuality,
           ratingValue: rating.ratingValue,
+          avgRating: avgRating,
           sizing: rating.sizing,
           createdAt: rating.createdAt,
         };

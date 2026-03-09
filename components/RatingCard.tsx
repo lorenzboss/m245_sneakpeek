@@ -10,6 +10,7 @@ interface RatingCardProps {
     ratingComfort: number;
     ratingQuality: number;
     ratingValue: number;
+    avgRating: number;
     sizing: number;
     createdAt: number;
   };
@@ -23,7 +24,7 @@ const SIZING_LABELS: Record<number, string> = {
 };
 
 export function RatingCard({ rating }: RatingCardProps) {
-  const avgRating = (rating.ratingDesign + rating.ratingComfort + rating.ratingQuality + rating.ratingValue) / 4;
+  // avgRating is now calculated in the backend (business logic)
 
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
@@ -34,7 +35,7 @@ export function RatingCard({ rating }: RatingCardProps) {
         </div>
         <div className="flex items-center gap-1 text-xl font-bold text-slate-900">
           <StarIcon fill="currentColor" className="size-5 text-yellow-500" />
-          {avgRating.toFixed(1)}
+          {rating.avgRating.toFixed(1)}
         </div>
       </div>
 
