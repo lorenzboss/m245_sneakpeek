@@ -35,7 +35,7 @@ export function RatingCard({ rating }: RatingCardProps) {
         </div>
         <div className="flex items-center gap-1 text-xl font-bold text-slate-900">
           <StarIcon fill="currentColor" className="size-5 text-yellow-500" />
-          {rating.avgRating.toFixed(1)}
+          {(rating.avgRating ?? 0).toFixed(1)}
         </div>
       </div>
 

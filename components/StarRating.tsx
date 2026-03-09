@@ -19,11 +19,11 @@ export function StarRating({ rating, maxStars = 5, showValue = true, size = "md"
       {Array.from({ length: maxStars }, (_, i) => i + 1).map((star) => (
         <StarIcon
           key={star}
-          fill={star <= Math.round(rating) ? "currentColor" : "none"}
+          fill={star <= Math.round(rating ?? 0) ? "currentColor" : "none"}
           className={`${sizeClasses[size]} text-yellow-500`}
         />
       ))}
-      {showValue && <span className="ml-2 font-semibold text-slate-900">{rating.toFixed(1)}</span>}
+      {showValue && <span className="ml-2 font-semibold text-slate-900">{(rating ?? 0).toFixed(1)}</span>}
     </div>
   );
 }

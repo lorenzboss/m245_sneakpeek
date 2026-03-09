@@ -75,7 +75,7 @@ export default function SneakerDetailPage() {
                   <div className="inline-flex w-fit items-center gap-3 rounded-lg bg-slate-50 px-4 py-3">
                     <div className="flex items-center gap-2 text-3xl font-bold text-slate-900">
                       <StarIcon fill="currentColor" className="size-8 text-yellow-500" />
-                      {sneaker.avgRating.toFixed(1)}
+                      {(sneaker.avgRating ?? 0).toFixed(1)}
                     </div>
                     <span className="text-sm text-slate-500">
                       ({sneaker.ratingsCount} {sneaker.ratingsCount === 1 ? "Bewertung" : "Bewertungen"})

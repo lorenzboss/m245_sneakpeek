@@ -46,7 +46,7 @@ export function SneakerGrid() {
               />
               {sneaker.ratingsCount > 0 && (
                 <div className="absolute top-3 right-3 flex items-center gap-2 rounded-full bg-slate-900 px-3 py-1 font-semibold text-white shadow-md">
-                  <StarIcon fill="white" className="size-4" /> {sneaker.avgRating.toFixed(1)}
+                  <StarIcon fill="white" className="size-4" /> {(sneaker.avgRating ?? 0).toFixed(1)}
                 </div>
               )}
             </div>
