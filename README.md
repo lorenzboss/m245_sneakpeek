@@ -102,6 +102,7 @@ npx convex dev
 ```
 
 Dies wird:
+
 - Dein Convex Deployment erstellen
 - Automatisch `CONVEX_URL` zu `.env.local` hinzufügen
 - Das Convex Dashboard im Browser öffnen
@@ -123,6 +124,7 @@ npm run dev
 ```
 
 Dies startet:
+
 - Next.js auf `http://localhost:3000`
 - Convex Backend im Watch-Modus
 
@@ -176,6 +178,7 @@ npx convex deploy
 ```
 
 Dies wird:
+
 - Deine Convex Functions in die Produktion deployen
 - Eine Produktions-`CONVEX_URL` generieren
 - Die Produktions-URL ausgeben
@@ -202,6 +205,7 @@ Dies wird:
 ### Verifikation
 
 Besuche deine deployed Anwendung unter `https://your-app.vercel.app` und überprüfe:
+
 - ✅ Sign-in/Sign-up funktioniert korrekt
 - ✅ Sneakers können hochgeladen werden
 - ✅ Bewertungen können abgegeben werden
@@ -259,6 +263,7 @@ m245_sneakpeek/
 ### Tabellen
 
 #### **users**
+
 ```typescript
 {
   userId: string,        // WorkOS User ID
@@ -268,6 +273,7 @@ m245_sneakpeek/
 ```
 
 #### **sneakers**
+
 ```typescript
 {
   name: string,          // Sneaker Name
@@ -281,6 +287,7 @@ m245_sneakpeek/
 ```
 
 #### **ratings**
+
 ```typescript
 {
   sneakerId: Id,         // Referenz zu sneakers

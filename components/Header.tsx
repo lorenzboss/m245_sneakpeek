@@ -3,6 +3,7 @@
 import { useAuth } from "@workos-inc/authkit-nextjs/components";
 import { useQuery } from "convex/react";
 import { LogOut, type LucideIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { api } from "../convex/_generated/api";
 
@@ -25,7 +26,7 @@ export function Header({ actionButton }: HeaderProps) {
           {/* Logo */}
           <Link href="/" className="flex shrink-0 items-center gap-3">
             <h1 className="text-xl font-bold text-slate-900 md:text-2xl">SneakPeek</h1>
-            <img src="/icon.svg" alt="SneakPeek Logo" className="h-8 w-8 md:h-10 md:w-10" />
+            <Image src="/icon.svg" alt="SneakPeek Logo" width={40} height={40} className="h-8 w-8 md:h-10 md:w-10" />
           </Link>
 
           {/* User Actions */}

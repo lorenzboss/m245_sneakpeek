@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from "convex/react";
 import { MinusIcon, PlusIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import { RatingSlider } from "./RatingSlider";
@@ -19,7 +18,6 @@ const SIZING_LABELS: Record<number, string> = {
 };
 
 export function RatingForm({ sneakerId }: RatingFormProps) {
-  const router = useRouter();
   const addRating = useMutation(api.ratings.addRating);
   const updateRating = useMutation(api.ratings.updateRating);
   const existingRating = useQuery(api.ratings.getMyRatingForSneaker, { sneakerId });
@@ -32,16 +30,21 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
   const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const hasLoadedRating = useRef(false);
 
-  // Load existing rating into form when it's available
+  // Load existing rating into form when it's available (only once)
   useEffect(() => {
-    if (existingRating) {
-      setRatingDesign(existingRating.ratingDesign);
-      setRatingComfort(existingRating.ratingComfort);
-      setRatingQuality(existingRating.ratingQuality);
-      setRatingValue(existingRating.ratingValue);
-      setSizing(existingRating.sizing);
-      setComment(existingRating.comment);
+    if (existingRating && !hasLoadedRating.current) {
+      // Batch state updates to avoid cascading renders
+      hasLoadedRating.current = true;
+      queueMicrotask(() => {
+        setRatingDesign(existingRating.ratingDesign);
+        setRatingComfort(existingRating.ratingComfort);
+        setRatingQuality(existingRating.ratingQuality);
+        setRatingValue(existingRating.ratingValue);
+        setSizing(existingRating.sizing);
+        setComment(existingRating.comment);
+      });
     }
   }, [existingRating]);
 
@@ -73,7 +76,7 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
           sizing,
         });
       }
-      router.push("/");
+      setIsSubmitting(false);
     } catch (error) {
       console.error("Error saving rating:", error);
       setError("Error saving rating. Please try again.");
