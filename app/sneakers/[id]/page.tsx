@@ -79,7 +79,7 @@ export default function SneakerDetailPage() {
                       ({sneaker.ratingsCount} {sneaker.ratingsCount === 1 ? "Bewertung" : "Bewertungen"})
                     </span>
                   </div>
-                  <div className="rounded-lg bg-slate-50 px-4 py-3 space-y-2 text-sm">
+                  <div className="space-y-2 rounded-lg bg-slate-50 px-4 py-3 text-sm">
                     <div className="flex items-center justify-between gap-4">
                       <span className="font-medium text-slate-700">Design:</span>
                       <div className="flex items-center gap-1">

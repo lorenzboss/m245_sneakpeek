@@ -147,14 +147,14 @@ export const getSneakerById = query({
     let avgComfort = 0;
     let avgQuality = 0;
     let avgValue = 0;
-    
+
     if (ratings.length > 0) {
       const totalRating = ratings.reduce((sum, rating) => {
         const ratingAvg = (rating.ratingDesign + rating.ratingComfort + rating.ratingQuality + rating.ratingValue) / 4;
         return sum + ratingAvg;
       }, 0);
       avgRating = totalRating / ratings.length;
-      
+
       // Calculate average for each category
       avgDesign = ratings.reduce((sum, r) => sum + r.ratingDesign, 0) / ratings.length;
       avgComfort = ratings.reduce((sum, r) => sum + r.ratingComfort, 0) / ratings.length;
