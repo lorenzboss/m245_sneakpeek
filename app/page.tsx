@@ -30,7 +30,7 @@ export default function Home() {
 function SignInForm() {
   return (
     <div className="mx-auto mt-16 flex max-w-80 flex-col gap-6">
-      <h2 className="text-center text-2xl font-bold text-slate-900">Welcome to SneakPeak</h2>
+      <h2 className="text-center text-2xl font-bold text-slate-900">Welcome to SneakPeek</h2>
       <p className="text-center text-slate-600">Sign in to share your sneaker collection</p>
       <div className="flex flex-col gap-3">
         <a href="/sign-in">
