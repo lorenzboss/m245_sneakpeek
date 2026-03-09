@@ -7,7 +7,7 @@ import { mutation, query } from "./_generated/server";
 export const addRating = mutation({
   args: {
     sneakerId: v.id("sneakers"),
-    comment: v.string(),
+    comment: v.optional(v.string()),
     ratingDesign: v.number(),
     ratingComfort: v.number(),
     ratingQuality: v.number(),
@@ -74,7 +74,7 @@ export const addRating = mutation({
     const ratingId = await ctx.db.insert("ratings", {
       sneakerId: args.sneakerId,
       creatorId: user._id,
-      comment: args.comment,
+      comment: args.comment || "",
       ratingDesign: args.ratingDesign,
       ratingComfort: args.ratingComfort,
       ratingQuality: args.ratingQuality,
@@ -181,7 +181,7 @@ export const getMyRatingForSneaker = query({
 export const updateRating = mutation({
   args: {
     ratingId: v.id("ratings"),
-    comment: v.string(),
+    comment: v.optional(v.string()),
     ratingDesign: v.number(),
     ratingComfort: v.number(),
     ratingQuality: v.number(),
@@ -238,7 +238,7 @@ export const updateRating = mutation({
     }
 
     await ctx.db.patch(args.ratingId, {
-      comment: args.comment,
+      comment: args.comment || "",
       ratingDesign: args.ratingDesign,
       ratingComfort: args.ratingComfort,
       ratingQuality: args.ratingQuality,

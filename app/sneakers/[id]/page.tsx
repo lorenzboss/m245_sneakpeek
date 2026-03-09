@@ -164,35 +164,51 @@ export default function SneakerDetailPage() {
           </div>
         </div>
 
-        {/* Rating Form */}
-        <div className="mb-8">
-          <Authenticated>
-            <RatingForm sneakerId={sneakerId} />
-          </Authenticated>
-          <Unauthenticated>
-            <div className="rounded-lg bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-xl font-bold text-slate-900">Bewerte diesen Sneaker</h2>
-              <p className="mb-4 text-slate-600">Du musst angemeldet sein, um eine Bewertung abzugeben.</p>
-              <Link href="/sign-in">
-                <button className="w-full rounded-lg bg-slate-900 px-4 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-slate-800">
-                  Anmelden
-                </button>
-              </Link>
-            </div>
-          </Unauthenticated>
-        </div>
-
-        {/* Ratings List */}
-        {ratings.length > 0 && (
-          <div className="mt-12">
-            <h2 className="mb-6 text-2xl font-bold text-slate-900">Bewertungen</h2>
-            <div className="space-y-4">
-              {ratings.map((rating) => (
-                <RatingCard key={rating._id} rating={rating} />
-              ))}
-            </div>
+        {/* Two-column layout: Rating Form and Ratings List */}
+        <div className="grid gap-8 lg:grid-cols-5">
+          {/* Rating Form - Left Column */}
+          <div className="lg:col-span-2">
+            <Authenticated>
+              <div className="lg:sticky lg:top-8">
+                <RatingForm sneakerId={sneakerId} />
+              </div>
+            </Authenticated>
+            <Unauthenticated>
+              <div className="lg:sticky lg:top-8">
+                <div className="rounded-xl border border-slate-200 bg-white p-8 shadow-lg">
+                  <h2 className="mb-3 text-2xl font-bold text-slate-900">Bewerte diesen Sneaker</h2>
+                  <p className="mb-6 text-slate-600">Du musst angemeldet sein, um eine Bewertung abzugeben.</p>
+                  <Link href="/sign-in">
+                    <button className="w-full rounded-lg bg-slate-900 px-6 py-4 text-lg font-bold text-white shadow-md transition-all hover:bg-slate-800 hover:shadow-lg">
+                      Anmelden
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            </Unauthenticated>
           </div>
-        )}
+
+          {/* Ratings List - Right Column */}
+          <div className="lg:col-span-3">
+            {ratings.length > 0 ? (
+              <div>
+                <h2 className="mb-6 text-2xl font-bold text-slate-900">
+                  Bewertungen <span className="text-slate-500">({ratings.length})</span>
+                </h2>
+                <div className="space-y-4">
+                  {ratings.map((rating) => (
+                    <RatingCard key={rating._id} rating={rating} />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 p-12 text-center">
+                <p className="text-lg text-slate-600">Noch keine Bewertungen vorhanden</p>
+                <p className="mt-2 text-sm text-slate-500">Sei der Erste, der diesen Sneaker bewertet!</p>
+              </div>
+            )}
+          </div>
+        </div>
       </main>
     </div>
   );

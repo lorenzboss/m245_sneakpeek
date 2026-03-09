@@ -39,7 +39,7 @@ export function RatingCard({ rating }: RatingCardProps) {
         </div>
       </div>
 
-      <p className="mb-4 text-slate-700">{rating.comment}</p>
+      {rating.comment && <p className="mb-4 text-slate-700">{rating.comment}</p>}
 
       <div className="grid grid-cols-2 gap-3 text-sm md:grid-cols-4">
         <CategoryBadge label="Design" value={rating.ratingDesign} />
