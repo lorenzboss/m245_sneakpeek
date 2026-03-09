@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "convex/react";
 import { MinusIcon, PlusIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
@@ -18,6 +19,7 @@ const SIZING_LABELS: Record<number, string> = {
 };
 
 export function RatingForm({ sneakerId }: RatingFormProps) {
+  const router = useRouter();
   const addRating = useMutation(api.ratings.addRating);
   const updateRating = useMutation(api.ratings.updateRating);
   const existingRating = useQuery(api.ratings.getMyRatingForSneaker, { sneakerId });
@@ -29,6 +31,7 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
   const [sizing, setSizing] = useState(0);
   const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   // Load existing rating into form when it's available
   useEffect(() => {
@@ -47,6 +50,7 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
     if (isSubmitting) return;
 
     setIsSubmitting(true);
+    setError("");
     try {
       if (existingRating) {
         await updateRating({
@@ -58,7 +62,6 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
           ratingValue,
           sizing,
         });
-        alert("Bewertung erfolgreich aktualisiert!");
       } else {
         await addRating({
           sneakerId,
@@ -69,12 +72,11 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
           ratingValue,
           sizing,
         });
-        alert("Bewertung erfolgreich hinzugefügt!");
       }
+      router.push("/");
     } catch (error) {
       console.error("Error saving rating:", error);
-      alert("Fehler beim Speichern der Bewertung");
-    } finally {
+      setError("Fehler beim Speichern der Bewertung. Bitte versuche es erneut.");
       setIsSubmitting(false);
     }
   };
@@ -146,6 +148,8 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
             placeholder="Teile deine Meinung zu diesem Sneaker..."
           />
         </div>
+
+        {error && <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600">{error}</div>}
 
         <button
           type="submit"

@@ -15,6 +15,7 @@ export default function AddSneakerPage() {
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [error, setError] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -35,9 +36,10 @@ export default function AddSneakerPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
 
     if (!name || !brand || !description || !image) {
-      alert("Please fill out all fields and select an image");
+      setError("Bitte fülle alle Felder aus und wähle ein Bild aus");
       return;
     }
 
@@ -52,7 +54,7 @@ export default function AddSneakerPage() {
       });
 
       if (!result.ok) {
-        throw new Error("Upload failed");
+        throw new Error("Upload fehlgeschlagen");
       }
 
       const { storageId } = await result.json();
@@ -67,8 +69,7 @@ export default function AddSneakerPage() {
       router.push("/");
     } catch (error) {
       console.error("Error uploading sneaker:", error);
-      alert("Upload error. Please try again.");
-    } finally {
+      setError("Upload-Fehler. Bitte versuche es erneut.");
       setIsUploading(false);
     }
   };
@@ -177,6 +178,11 @@ export default function AddSneakerPage() {
                 required
               />
             </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600">{error}</div>
+            )}
 
             {/* Submit Button */}
             <div className="flex flex-col gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:justify-end">
