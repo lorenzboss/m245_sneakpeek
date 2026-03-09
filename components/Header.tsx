@@ -23,8 +23,9 @@ export function Header({ actionButton }: HeaderProps) {
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between gap-4">
           {/* Logo */}
-          <Link href="/" className="shrink-0">
+          <Link href="/" className="flex shrink-0 items-center gap-3">
             <h1 className="text-xl font-bold text-slate-900 md:text-2xl">SneakPeek</h1>
+            <img src="/icon.svg" alt="SneakPeek Logo" className="h-8 w-8 md:h-10 md:w-10" />
           </Link>
 
           {/* User Actions */}
