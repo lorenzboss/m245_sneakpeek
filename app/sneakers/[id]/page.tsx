@@ -140,7 +140,7 @@ export default function SneakerDetailPage() {
             <div className="flex flex-col justify-center">
               <h1 className="mb-3 text-4xl font-bold text-slate-900">{sneaker.name}</h1>
               <p className="mb-4 text-xl font-semibold text-slate-600">{sneaker.brand}</p>
-              {sneaker.description && <p className="mb-6 text-slate-700">{sneaker.description}</p>}
+              {sneaker.description && <p className="mb-6 whitespace-pre-wrap text-slate-700">{sneaker.description}</p>}
               {sneaker.ratingsCount > 0 && (
                 <div className="space-y-3">
                   <div className="inline-flex w-fit items-center gap-3 rounded-lg bg-slate-50 px-4 py-3">
