@@ -19,6 +19,7 @@ interface RatingCardProps {
 const SIZING_LABELS: Record<number, string> = {
   "-2": "Way too small",
   "-1": "Slightly small",
+  "0": "Perfect fit",
   "1": "Slightly large",
   "2": "Way too large",
 };
@@ -50,7 +51,7 @@ export function RatingCard({ rating }: RatingCardProps) {
         <CategoryBadge label="Value for Money" value={rating.ratingValue} />
       </div>
 
-      {rating.sizing !== 0 && (
+      {rating.sizing != null && (
         <div className="mt-2 text-xs text-slate-600 sm:mt-3">Size: {SIZING_LABELS[rating.sizing]}</div>
       )}
     </div>

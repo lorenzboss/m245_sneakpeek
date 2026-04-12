@@ -125,6 +125,7 @@ export const getSneakerById = query({
       avgComfort: v.number(),
       avgQuality: v.number(),
       avgValue: v.number(),
+      avgSizing: v.number(),
       ratingsCount: v.number(),
     }),
     v.null(),
@@ -147,6 +148,7 @@ export const getSneakerById = query({
     let avgComfort = 0;
     let avgQuality = 0;
     let avgValue = 0;
+    let avgSizing = 0;
 
     if (ratings.length > 0) {
       const totalRating = ratings.reduce((sum, rating) => {
@@ -160,6 +162,7 @@ export const getSneakerById = query({
       avgComfort = ratings.reduce((sum, r) => sum + r.ratingComfort, 0) / ratings.length;
       avgQuality = ratings.reduce((sum, r) => sum + r.ratingQuality, 0) / ratings.length;
       avgValue = ratings.reduce((sum, r) => sum + r.ratingValue, 0) / ratings.length;
+      avgSizing = ratings.reduce((sum, r) => sum + r.sizing, 0) / ratings.length;
     }
 
     return {
@@ -175,6 +178,7 @@ export const getSneakerById = query({
       avgComfort,
       avgQuality,
       avgValue,
+      avgSizing,
       ratingsCount: ratings.length,
     };
   },

@@ -169,6 +169,7 @@ export default function SneakerDetailPage() {
                     avgComfort={sneaker.avgComfort}
                     avgQuality={sneaker.avgQuality}
                     avgValue={sneaker.avgValue}
+                    avgSizing={sneaker.avgSizing}
                   />
                 </div>
               )}
