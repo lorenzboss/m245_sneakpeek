@@ -22,10 +22,10 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
   const updateRating = useMutation(api.ratings.updateRating);
   const existingRating = useQuery(api.ratings.getMyRatingForSneaker, { sneakerId });
 
-  const [ratingDesign, setRatingDesign] = useState(5);
-  const [ratingComfort, setRatingComfort] = useState(5);
-  const [ratingQuality, setRatingQuality] = useState(5);
-  const [ratingValue, setRatingValue] = useState(5);
+  const [ratingDesign, setRatingDesign] = useState(0);
+  const [ratingComfort, setRatingComfort] = useState(0);
+  const [ratingQuality, setRatingQuality] = useState(0);
+  const [ratingValue, setRatingValue] = useState(0);
   const [sizing, setSizing] = useState(0);
   const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,7 +50,7 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isSubmitting) return;
+    if (isSubmitting || !allRatingsFilled) return;
 
     setIsSubmitting(true);
     setError("");
@@ -85,6 +85,8 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
   };
 
   const isEditMode = existingRating !== null && existingRating !== undefined;
+
+  const allRatingsFilled = ratingDesign > 0 && ratingComfort > 0 && ratingQuality > 0 && ratingValue > 0;
 
   const hasChanged =
     !isEditMode ||
@@ -172,7 +174,7 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
 
         <button
           type="submit"
-          disabled={isSubmitting || !hasChanged}
+          disabled={isSubmitting || !hasChanged || !allRatingsFilled}
           className="w-full rounded-lg bg-slate-900 px-4 py-3 text-base font-bold text-white shadow-md transition-all hover:bg-slate-800 hover:shadow-lg disabled:opacity-50 disabled:hover:shadow-md sm:px-6 sm:py-4 sm:text-lg"
         >
           {isSubmitting ? (isEditMode ? "Updating..." : "Saving...") : isEditMode ? "Update Rating" : "Submit Rating"}
