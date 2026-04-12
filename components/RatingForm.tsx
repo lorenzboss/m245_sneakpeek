@@ -86,6 +86,15 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
 
   const isEditMode = existingRating !== null && existingRating !== undefined;
 
+  const hasChanged =
+    !isEditMode ||
+    ratingDesign !== existingRating.ratingDesign ||
+    ratingComfort !== existingRating.ratingComfort ||
+    ratingQuality !== existingRating.ratingQuality ||
+    ratingValue !== existingRating.ratingValue ||
+    sizing !== existingRating.sizing ||
+    comment !== existingRating.comment;
+
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-lg sm:p-6 md:p-8">
       <div className="mb-6 border-b border-slate-100 pb-4 sm:mb-8 sm:pb-6">
@@ -163,7 +172,7 @@ export function RatingForm({ sneakerId }: RatingFormProps) {
 
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || !hasChanged}
           className="w-full rounded-lg bg-slate-900 px-4 py-3 text-base font-bold text-white shadow-md transition-all hover:bg-slate-800 hover:shadow-lg disabled:opacity-50 disabled:hover:shadow-md sm:px-6 sm:py-4 sm:text-lg"
         >
           {isSubmitting ? (isEditMode ? "Updating..." : "Saving...") : isEditMode ? "Update Rating" : "Submit Rating"}
