@@ -3,7 +3,6 @@
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth, useQuery } from "convex/react";
 import { LogOut, UserRound, type LucideIcon } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { api } from "../convex/_generated/api";
@@ -31,7 +30,8 @@ export function Header({ actionButton }: HeaderProps) {
           {/* Logo */}
           <Link href="/" className="flex shrink-0 items-center gap-3">
             <h1 className="text-xl font-bold text-slate-900 md:text-2xl">SneakPeek</h1>
-            <Image src="/icon.svg" alt="SneakPeek Logo" width={40} height={40} className="h-8 w-8 md:h-10 md:w-10" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/icon.svg" alt="SneakPeek Logo" className="h-8 w-8 md:h-10 md:w-10" />
           </Link>
 
           {/* User Actions */}

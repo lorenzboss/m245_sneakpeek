@@ -40,7 +40,7 @@ function ValidateEmailWithCode({ emailCode }: { emailCode: string }) {
       <AuthPanel title="Email verified">
         <p className="text-sm text-slate-600">Your account is ready and you are signed in.</p>
         <Link href="/" className="mt-4 inline-block text-sm font-semibold underline">
-          Continue to SneakPeek
+          Continue to home
         </Link>
       </AuthPanel>
     );

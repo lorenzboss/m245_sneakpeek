@@ -114,7 +114,7 @@ function ResetPassword({ emailCode }: { emailCode: string }) {
       <AuthPanel title="Password reset">
         <p className="text-sm text-slate-600">Your password has been reset and you are signed in.</p>
         <Link href="/" className="mt-4 inline-block text-sm font-semibold underline">
-          Continue to SneakPeek
+          Continue to home
         </Link>
       </AuthPanel>
     );
