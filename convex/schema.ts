@@ -6,6 +6,7 @@ export default defineSchema({
     userId: v.optional(v.string()),
     email: v.optional(v.string()),
     name: v.optional(v.string()),
+    displayName: v.optional(v.string()),
   }).index("by_userId", ["userId"]),
 
   sneakers: defineTable({

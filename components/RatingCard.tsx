@@ -32,7 +32,7 @@ export function RatingCard({ rating }: RatingCardProps) {
       <div className="mb-3 flex items-start justify-between sm:mb-4">
         <div>
           <div className="mb-1 text-sm font-semibold text-slate-900 sm:text-base">
-            {rating.creatorName || "Anonymous User"}
+            {rating.creatorName || "Sneaker fan"}
           </div>
           <div className="text-xs text-slate-500">{new Date(rating.createdAt).toLocaleDateString("en-US")}</div>
         </div>

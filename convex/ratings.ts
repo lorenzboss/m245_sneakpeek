@@ -109,7 +109,8 @@ export const getRatingsForSneaker = query({
           _id: rating._id,
           sneakerId: rating.sneakerId,
           creatorId: rating.creatorId,
-          creatorName: user?.name || user?.email || null,
+          creatorName:
+            user?.displayName || (user?.name && !user.name.includes("@") ? user.name : null) || "Sneaker fan",
           comment: rating.comment,
           ratingDesign: rating.ratingDesign,
           ratingComfort: rating.ratingComfort,

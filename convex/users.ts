@@ -34,11 +34,36 @@ export const syncProfile = mutation({
       throw new Error("User not found in database");
     }
 
-    await ctx.db.patch(userId, {
-      email: identity.email ?? user.email,
-      name: identity.name ?? identity.email ?? user.name,
-    });
+    if (identity.name && identity.name !== user.name) {
+      await ctx.db.patch(userId, { name: identity.name });
+    }
 
+    return null;
+  },
+});
+
+export const updateDisplayName = mutation({
+  args: {
+    displayName: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    const displayName = args.displayName.trim();
+    if (displayName.length === 0 || displayName.length > 32) {
+      throw new Error("Display name must be between 1 and 32 characters");
+    }
+
+    const user = await ctx.db.get("users", userId);
+    if (!user) {
+      throw new Error("User not found in database");
+    }
+
+    await ctx.db.patch(userId, { displayName });
     return null;
   },
 });
@@ -52,6 +77,7 @@ export const getCurrentUser = query({
       userId: v.optional(v.string()),
       email: v.optional(v.string()),
       name: v.optional(v.string()),
+      displayName: v.optional(v.string()),
     }),
     v.null(),
   ),

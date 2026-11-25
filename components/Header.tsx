@@ -2,7 +2,7 @@
 
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth, useQuery } from "convex/react";
-import { LogOut, type LucideIcon } from "lucide-react";
+import { LogOut, UserRound, type LucideIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -21,6 +21,8 @@ export function Header({ actionButton }: HeaderProps) {
   const { signOut } = useAuthActions();
   const router = useRouter();
   const convexUser = useQuery(api.users.getCurrentUser);
+  const displayName =
+    convexUser?.displayName ?? (convexUser?.name && !convexUser.name.includes("@") ? convexUser.name : null);
 
   return (
     <header className="sticky top-0 z-10 border-b border-slate-200 bg-white shadow-sm">
@@ -36,9 +38,9 @@ export function Header({ actionButton }: HeaderProps) {
           {isAuthenticated && (
             <div className="flex items-center gap-2 md:gap-3">
               {/* Username */}
-              {convexUser?.name && (
+              {displayName && (
                 <span className="mt-0.5 hidden max-w-30 truncate text-slate-700 sm:inline-block md:max-w-50">
-                  {convexUser.name}
+                  {displayName}
                 </span>
               )}
 
@@ -52,6 +54,15 @@ export function Header({ actionButton }: HeaderProps) {
                   <span className="hidden sm:inline">{actionButton.label}</span>
                 </Link>
               )}
+
+              <Link
+                href="/profile"
+                aria-label="Profile"
+                className="flex shrink-0 items-center gap-1.5 rounded-lg bg-slate-100 px-2 py-1.5 text-sm text-slate-700 transition-colors hover:bg-slate-200 md:gap-2 md:px-3 md:text-base"
+              >
+                <UserRound className="h-5 w-5" />
+                <span className="hidden sm:inline">Profile</span>
+              </Link>
 
               {/* Logout Button */}
               <button
