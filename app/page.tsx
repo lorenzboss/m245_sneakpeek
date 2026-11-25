@@ -1,6 +1,6 @@
 "use client";
 
-import { Authenticated, Unauthenticated } from "convex/react";
+import { Authenticated, AuthLoading, Unauthenticated } from "convex/react";
 import { Plus } from "lucide-react";
 import { Header } from "../components/Header";
 import { SneakerGrid } from "../components/SneakerGrid";
@@ -19,6 +19,9 @@ export default function Home() {
         <Authenticated>
           <SneakerGrid />
         </Authenticated>
+        <AuthLoading>
+          <div className="py-12 text-center text-slate-600">Loading...</div>
+        </AuthLoading>
         <Unauthenticated>
           <SignInForm />
         </Unauthenticated>

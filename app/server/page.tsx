@@ -1,11 +1,11 @@
 import { api } from "@/convex/_generated/api";
-import { withAuth } from "@workos-inc/authkit-nextjs";
+import { convexAuthNextjsAccessToken } from "@/lib/convexAuth";
 import { preloadQuery, preloadedQueryResult } from "convex/nextjs";
 import Home from "./inner";
 
 export default async function ServerPage() {
-  const { accessToken } = await withAuth();
-  const preloaded = await preloadQuery(api.sneakers.listSneakers, {}, { token: accessToken });
+  const token = await convexAuthNextjsAccessToken();
+  const preloaded = await preloadQuery(api.sneakers.listSneakers, {}, { token: token ?? undefined });
 
   const data = preloadedQueryResult(preloaded);
 

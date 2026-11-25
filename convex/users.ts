@@ -1,71 +1,66 @@
+import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 
-export const storeUser = mutation({
-  args: {},
+export const createUser = internalMutation({
+  args: {
+    method: v.object({
+      name: v.literal("emailPassword"),
+      profile: v.object({}),
+    }),
+  },
+  returns: v.id("users"),
   handler: async (ctx) => {
+    return await ctx.db.insert("users", {});
+  },
+});
+
+export const syncProfile = mutation({
+  args: {},
+  returns: v.null(),
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error("Not authenticated");
     }
 
-    const existing = await ctx.db
-      .query("users")
-      .withIndex("by_userId", (q) => q.eq("userId", identity.subject))
-      .first();
-
-    if (!existing) {
-      const userId = await ctx.db.insert("users", {
-        userId: identity.subject,
-        email: "",
-        name: undefined,
-      });
-      console.log("Created new user:", userId, "subject:", identity.subject);
-    } else {
-      console.log("User already exists:", existing._id);
+    const user = await ctx.db.get("users", userId);
+    if (!user) {
+      throw new Error("User not found in database");
     }
+
+    await ctx.db.patch(userId, {
+      email: identity.email ?? user.email,
+      name: identity.name ?? identity.email ?? user.name,
+    });
+
+    return null;
   },
 });
 
 export const getCurrentUser = query({
   args: {},
+  returns: v.union(
+    v.object({
+      _id: v.id("users"),
+      _creationTime: v.number(),
+      userId: v.optional(v.string()),
+      email: v.optional(v.string()),
+      name: v.optional(v.string()),
+    }),
+    v.null(),
+  ),
   handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
       return null;
     }
 
-    return await ctx.db
-      .query("users")
-      .withIndex("by_userId", (q) => q.eq("userId", identity.subject))
-      .first();
-  },
-});
-
-export const updateUserDetails = mutation({
-  args: {
-    userId: v.string(),
-    email: v.string(),
-    firstName: v.optional(v.string()),
-    lastName: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_userId", (q) => q.eq("userId", args.userId))
-      .first();
-
-    if (!user) {
-      await ctx.db.insert("users", {
-        userId: args.userId,
-        email: args.email,
-        name: [args.firstName, args.lastName].filter(Boolean).join(" "),
-      });
-    } else {
-      await ctx.db.patch(user._id, {
-        email: args.email,
-        name: [args.firstName, args.lastName].filter(Boolean).join(" ") || user.name,
-      });
-    }
+    return await ctx.db.get("users", userId);
   },
 });

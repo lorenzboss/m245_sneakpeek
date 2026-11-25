@@ -1,51 +1,24 @@
-import { authkitMiddleware } from "@workos-inc/authkit-nextjs";
+import { convexAuthNextjsProxy, nextjsProxyRedirect } from "@/lib/convexAuth";
 
-// Log environment at build time
-console.log("[Middleware Build] Environment:", {
-  VERCEL_ENV: process.env.VERCEL_ENV,
-  VERCEL_BRANCH_URL: process.env.VERCEL_BRANCH_URL,
-  VERCEL_PROJECT_PRODUCTION_URL: process.env.VERCEL_PROJECT_PRODUCTION_URL,
-  VERCEL_URL: process.env.VERCEL_URL,
-});
+const publicPaths = new Set([
+  "/",
+  "/sign-in",
+  "/sign-up",
+  "/validate-email",
+  "/confirm-email-change",
+  "/reset-password",
+]);
 
-// Determine the redirect URI based on the environment
-const getRedirectUri = () => {
-  if (process.env.VERCEL_ENV === "preview" && process.env.VERCEL_BRANCH_URL) {
-    const uri = `https://${process.env.VERCEL_BRANCH_URL}/callback`;
-    console.log("[Middleware Build] Using preview redirectUri:", uri);
-    return uri;
+export default convexAuthNextjsProxy(async (request, { isAuthenticated }) => {
+  if (publicPaths.has(request.nextUrl.pathname)) {
+    return;
   }
-  if (process.env.VERCEL_ENV === "production" && process.env.VERCEL_PROJECT_PRODUCTION_URL) {
-    const uri = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/callback`;
-    console.log("[Middleware Build] Using production redirectUri:", uri);
-    return uri;
-  }
-  if (process.env.VERCEL_URL) {
-    const uri = `https://${process.env.VERCEL_URL}/callback`;
-    console.log("[Middleware Build] Using VERCEL_URL redirectUri:", uri);
-    return uri;
-  }
-  // Fallback for local development
-  console.log("[Middleware Build] No Vercel environment detected, using default redirectUri");
-  return undefined;
-};
 
-const redirectUri = getRedirectUri();
-
-export default authkitMiddleware({
-  eagerAuth: true,
-  middlewareAuth: {
-    enabled: true,
-    unauthenticatedPaths: ["/", "/sign-in", "/sign-up"],
-  },
-  redirectUri,
+  if (!(await isAuthenticated())) {
+    return nextjsProxyRedirect(request, "/sign-in");
+  }
 });
 
 export const config = {
-  matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
-    "/(api|trpc)(.*)",
-  ],
+  matcher: ["/((?!auth(?:/|$)|_next/static|_next/image|favicon.ico).*)"],
 };

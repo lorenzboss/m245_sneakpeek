@@ -1,10 +1,11 @@
 "use client";
 
-import { useAuth } from "@workos-inc/authkit-nextjs/components";
-import { useQuery } from "convex/react";
+import { useAuthActions } from "@convex-dev/auth/react";
+import { useConvexAuth, useQuery } from "convex/react";
 import { LogOut, type LucideIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { api } from "../convex/_generated/api";
 
 interface HeaderProps {
@@ -16,7 +17,9 @@ interface HeaderProps {
 }
 
 export function Header({ actionButton }: HeaderProps) {
-  const { user, signOut } = useAuth();
+  const { isAuthenticated } = useConvexAuth();
+  const { signOut } = useAuthActions();
+  const router = useRouter();
   const convexUser = useQuery(api.users.getCurrentUser);
 
   return (
@@ -30,7 +33,7 @@ export function Header({ actionButton }: HeaderProps) {
           </Link>
 
           {/* User Actions */}
-          {user && (
+          {isAuthenticated && (
             <div className="flex items-center gap-2 md:gap-3">
               {/* Username */}
               {convexUser?.name && (
@@ -52,7 +55,10 @@ export function Header({ actionButton }: HeaderProps) {
 
               {/* Logout Button */}
               <button
-                onClick={() => signOut()}
+                onClick={async () => {
+                  await signOut();
+                  router.push("/sign-in");
+                }}
                 className="flex shrink-0 items-center gap-1.5 rounded-lg bg-slate-100 px-2 py-1.5 text-sm text-slate-700 transition-colors hover:bg-slate-200 md:gap-2 md:px-3 md:text-base"
               >
                 <LogOut className="h-5 w-5" />

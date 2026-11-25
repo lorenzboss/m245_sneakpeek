@@ -27,7 +27,7 @@ SneakPeek ist eine Community-getriebene Bewertungsplattform, auf der Nutzer Snea
 - **Frontend**: Next.js 16, React 19, TypeScript
 - **Styling**: Tailwind CSS 4
 - **Backend**: Convex (Backend-as-a-Service)
-- **Authentifizierung**: WorkOS AuthKit
+- **Authentifizierung**: Convex Auth v2 (E-Mail + Passwort)
 - **Icons**: Lucide React
 - **Deployment**: Vercel
 
@@ -37,7 +37,7 @@ Bevor du beginnst, stelle sicher, dass du folgendes installiert hast:
 
 - **Node.js** 18 oder höher ([Download](https://nodejs.org/))
 - **npm** oder **yarn**
-- Ein **[WorkOS Account](https://workos.com/)** (kostenloser Tarif verfügbar)
+- Ein **[Resend Account](https://resend.com/)** mit verifizierter Absenderdomain
 - Ein **[Convex Account](https://convex.dev/)** (kostenloser Tarif verfügbar)
 
 ---
@@ -59,63 +59,30 @@ cd m245_sneakpeek
 npm install
 ```
 
-### 3. Umgebungsvariablen konfigurieren
+### 3. Convex-Deployment auswählen
 
-Erstelle eine `.env.local` Datei im Root-Verzeichnis:
-
-```bash
-cp .env.local.example .env.local
-```
-
-Öffne `.env.local` und konfiguriere die folgenden Variablen:
-
-```env
-# WorkOS AuthKit Konfiguration
-WORKOS_CLIENT_ID=client_your_client_id_here
-WORKOS_API_KEY=sk_test_your_api_key_here
-WORKOS_COOKIE_PASSWORD=your_secure_password_here_must_be_at_least_32_characters_long
-NEXT_PUBLIC_WORKOS_REDIRECT_URI=http://localhost:3000/callback
-```
-
-### 4. WorkOS Authentifizierung einrichten
-
-1. Gehe zum [WorkOS Dashboard](https://dashboard.workos.com/)
-2. Erstelle ein neues Projekt oder wähle ein existierendes aus
-3. Navigiere zu **API Keys** und kopiere:
-   - **Client ID** → `WORKOS_CLIENT_ID`
-   - **API Key** → `WORKOS_API_KEY`
-4. Generiere ein sicheres Passwort (min. 32 Zeichen) für `WORKOS_COOKIE_PASSWORD`
-   ```bash
-   # Sicheres Passwort auf macOS/Linux generieren:
-   openssl rand -base64 32
-   ```
-5. Füge die Redirect URI im WorkOS Dashboard hinzu:
-   - Gehe zu **Redirect URIs**
-   - Füge hinzu: `http://localhost:3000/callback`
-
-### 5. Convex Backend einrichten
-
-Initialisiere Convex und verbinde es mit deinem Projekt:
+Wähle ein Convex-Dev-Deployment aus oder erstelle eines:
 
 ```bash
 npx convex dev
 ```
 
-Dies wird:
+Die CLI schreibt die Deployment-URL nach `.env.local`. Wenn der Prozess startet, stoppe ihn nach der Auswahl mit `Ctrl+C`. Beim ersten Lauf kann Convex wegen der noch fehlenden Resend-Variablen abbrechen; setze sie im nächsten Schritt.
 
-- Dein Convex Deployment erstellen
-- Automatisch `CONVEX_URL` zu `.env.local` hinzufügen
-- Das Convex Dashboard im Browser öffnen
+### 4. E-Mail-Versand konfigurieren
 
-Konfiguriere die WorkOS Authentifizierung in Convex:
+Convex Auth versendet E-Mail-Verifikation und Passwort-Reset-Links über Resend. Richte eine Resend-Domain ein und setze die Werte für das aktive Convex-Deployment:
 
 ```bash
-npx convex auth add workos
+npx convex env set RESEND_API_KEY
+npx convex env set SENDER_EMAIL no-reply@your-verified-domain.example
+npx convex env set SENDER_NAME "SneakPeek"
+npx convex env set SITE_URL http://localhost:3000
 ```
 
-Dies erstellt `convex/auth.config.ts` mit der WorkOS-Integration.
+`RESEND_API_KEY` wird interaktiv abgefragt. `SENDER_EMAIL` muss zu einer in Resend verifizierten Domain gehören.
 
-### 6. Development Server starten
+### 5. Development Server starten
 
 Starte sowohl das Next.js Frontend als auch das Convex Backend:
 
@@ -128,7 +95,7 @@ Dies startet:
 - Next.js auf `http://localhost:3000`
 - Convex Backend im Watch-Modus
 
-### 7. Anwendung öffnen
+### 6. Anwendung öffnen
 
 Öffne [http://localhost:3000](http://localhost:3000) in deinem Browser.
 
@@ -160,47 +127,31 @@ git push origin main
 4. Konfiguriere das Projekt:
    - **Framework Preset**: Next.js
    - **Root Directory**: `./` (Standard)
-5. Füge Umgebungsvariablen hinzu:
-   ```
-   WORKOS_CLIENT_ID=client_your_production_client_id
-   WORKOS_API_KEY=sk_your_production_api_key
-   WORKOS_COOKIE_PASSWORD=your_production_secure_password_32_chars
-   NEXT_PUBLIC_WORKOS_REDIRECT_URI=https://your-app.vercel.app/callback
-   ```
-6. Klicke auf **"Deploy"**
+   - Verbinde Vercel mit dem Convex-Projekt, damit `NEXT_PUBLIC_CONVEX_URL` gesetzt ist.
+5. Klicke auf **"Deploy"**
 
-#### 3. Backend auf Convex deployen
+#### 3. Convex-Produktionsumgebung konfigurieren
 
-Deploye dein Convex Backend in die Produktion:
+Setze die Resend-Variablen und die öffentliche URL auf dem Convex-Produktionsdeployment:
+
+```bash
+npx convex env set RESEND_API_KEY
+npx convex env set SENDER_EMAIL no-reply@your-verified-domain.example
+npx convex env set SENDER_NAME "SneakPeek"
+npx convex env set SITE_URL https://your-app.vercel.app
+```
+
+Deploye anschließend das Backend:
 
 ```bash
 npx convex deploy
 ```
 
-Dies wird:
+Wähle für `npx convex env set` und `npx convex deploy` jeweils das passende Convex-Produktionsdeployment. In Vercel muss `NEXT_PUBLIC_CONVEX_URL` auf dessen URL zeigen.
 
-- Deine Convex Functions in die Produktion deployen
-- Eine Produktions-`CONVEX_URL` generieren
-- Die Produktions-URL ausgeben
+#### Daten und Nutzerkonten
 
-#### 4. Vercel Umgebungsvariablen aktualisieren
-
-1. Kopiere die Produktions-`CONVEX_URL` aus dem Convex Deployment
-2. Gehe zu deinem Vercel Projekt → **Settings** → **Environment Variables**
-3. Füge hinzu oder aktualisiere:
-   ```
-   CONVEX_URL=https://your-production.convex.cloud
-   ```
-4. Deploye dein Vercel Projekt neu, um die Änderungen zu übernehmen
-
-#### 5. WorkOS Redirect URIs aktualisieren
-
-1. Gehe zum [WorkOS Dashboard](https://dashboard.workos.com/)
-2. Navigiere zu **Redirect URIs**
-3. Füge deine Produktions-Redirect URI hinzu:
-   ```
-   https://your-app.vercel.app/callback
-   ```
+Convex Auth v2 kann WorkOS-Konten und deren Passwörter/Sessions nicht übernehmen. Nutzer müssen sich neu registrieren. Die bestehenden Convex-Dokumente für Sneaker, Reviews und frühere Nutzer bleiben erhalten; neue Konten erhalten neue Nutzer-IDs, daher werden frühere Inhalte nicht automatisch dem neuen Konto zugeordnet.
 
 ### Verifikation
 
@@ -220,29 +171,36 @@ Besuche deine deployed Anwendung unter `https://your-app.vercel.app` und überpr
 m245_sneakpeek/
 ├── app/                      # Next.js App Router
 │   ├── add/                 # Sneaker hinzufügen Seite
-│   ├── callback/            # Auth Callback Route
 │   ├── server/              # Meine Sneakers Seite
-│   ├── sign-in/             # Sign-in Route
-│   ├── sign-up/             # Sign-up Route
+│   ├── sign-in/             # Sign-in-Seite
+│   ├── sign-up/             # Registrierungsseite
+│   ├── auth/                # Convex-Auth-Session-Routen
+│   ├── validate-email/      # E-Mail-Verifikation
+│   ├── reset-password/      # Passwort-Wiederherstellung
 │   ├── sneakers/[id]/       # Sneaker Detail & Edit Seiten
 │   ├── layout.tsx           # Root Layout
 │   ├── page.tsx             # Homepage
 │   └── globals.css          # Globale Styles
 ├── components/              # Wiederverwendbare React Komponenten
 │   ├── CategoryRatings.tsx  # Kategorie-Durchschnitte Anzeige
-│   ├── ConvexClientProvider.tsx
+│   ├── AuthPanel.tsx
 │   ├── Footer.tsx           # App Footer
 │   ├── Header.tsx           # Navigation Header
+│   ├── PasswordRecoveryFlow.tsx
 │   ├── RatingCard.tsx       # Einzelne Bewertung Anzeige
 │   ├── RatingForm.tsx       # Bewertungsformular
 │   ├── RatingSlider.tsx     # Stern-Bewertungs-Input
 │   ├── SneakerGrid.tsx      # Sneaker Grid Layout
 │   ├── StarRating.tsx       # Stern-Anzeige Komponente
-│   └── useUserSync.ts       # User Sync Hook
+│   ├── SignInForm.tsx       # E-Mail-/Passwort-Login
+│   ├── SignUpForm.tsx       # Registrierung
+│   ├── UserProfileSync.tsx  # Convex-Profil synchronisieren
+│   └── ValidateEmailFlow.tsx
 ├── convex/                  # Convex Backend
 │   ├── _generated/          # Auto-generierte Types
-│   ├── actions.ts           # Server Actions
+│   ├── auth.ts              # Convex Auth v2
 │   ├── auth.config.ts       # Auth Konfiguration
+│   ├── convex.config.ts     # Auth- und Resend-Komponenten
 │   ├── ratings.ts           # Rating Queries/Mutations
 │   ├── schema.ts            # Datenbank Schema
 │   ├── sneakers.ts          # Sneaker Queries/Mutations
@@ -266,9 +224,9 @@ m245_sneakpeek/
 
 ```typescript
 {
-  userId: string,        // WorkOS User ID
-  email: string,         // E-Mail Adresse
-  name?: string          // Optionaler Name
+  userId?: string,       // Legacy WorkOS-ID, bleibt für alte Dokumente erhalten
+  email?: string,        // E-Mail Adresse
+  name?: string          // Optionaler Anzeigename
 }
 ```
 
@@ -304,7 +262,7 @@ m245_sneakpeek/
 
 ### Indizes
 
-- `users`: `by_userId`
+- `users`: `by_userId` (Legacy-Index)
 - `sneakers`: `by_creator`
 - `ratings`: `by_sneaker`, `by_creator`
 
@@ -328,9 +286,9 @@ npm run format       # Code mit Prettier formatieren
 
 ### Authentifizierung funktioniert nicht
 
-- Überprüfe, ob die WorkOS Redirect URI korrekt konfiguriert ist
-- Stelle sicher, dass `WORKOS_COOKIE_PASSWORD` mindestens 32 Zeichen hat
-- Prüfe, ob alle WorkOS Umgebungsvariablen korrekt gesetzt sind
+- Prüfe im Convex-Dashboard, ob `RESEND_API_KEY` und `SENDER_EMAIL` für das aktive Deployment gesetzt sind.
+- Stelle sicher, dass die Absenderdomain in Resend verifiziert ist und `SITE_URL` auf die richtige Next.js-URL zeigt.
+- Nach der WorkOS-Ablösung müssen sich bestehende Nutzer neu registrieren.
 
 ### Bilder werden nicht angezeigt
 
@@ -341,7 +299,7 @@ npm run format       # Code mit Prettier formatieren
 ### Convex Verbindungsfehler
 
 - Führe `npx convex dev` aus, um die Verbindung wiederherzustellen
-- Überprüfe, ob `CONVEX_URL` in `.env.local` korrekt ist
+- Überprüfe, ob `NEXT_PUBLIC_CONVEX_URL` in `.env.local` korrekt ist
 - Prüfe das Convex Dashboard auf den Deployment-Status
 
 ### Build-Fehler
@@ -363,7 +321,8 @@ npm run format       # Code mit Prettier formatieren
 
 - [Next.js Dokumentation](https://nextjs.org/docs)
 - [Convex Dokumentation](https://docs.convex.dev)
-- [WorkOS AuthKit Docs](https://workos.com/docs/authkit)
+- [Convex Auth v2](https://docs.convex.dev/auth/convex-auth)
+- [Resend Dokumentation](https://resend.com/docs)
 - [Tailwind CSS Docs](https://tailwindcss.com/docs)
 - [Lucide Icons](https://lucide.dev/)
 

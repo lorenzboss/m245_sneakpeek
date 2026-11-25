@@ -3,14 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
-  "homepage": "https://github.com/workos/template-convex-nextjs-authkit/#readme",
-  "convex-authkit-auto-provisioning": true,
+  "homepage": "https://github.com/lorenzboss/m245_sneakpeek/#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/workos/template-convex-nextjs-authkit.git"
+    "url": "git+https://github.com/lorenzboss/m245_sneakpeek.git"
   },
   "bugs": {
-    "url": "https://github.com/workos/template-convex-nextjs-authkit/issues"
+    "url": "https://github.com/lorenzboss/m245_sneakpeek/issues"
   },
   "scripts": {
     "dev": "npm-run-all --parallel dev:frontend dev:backend",
@@ -23,8 +22,8 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@workos-inc/authkit-nextjs": "^2.13.0",
-    "@workos-inc/node": "^8.2.0",
+    "@convex-dev/auth": "^2.1.0",
+    "@convex-dev/resend": "^0.2.10",
     "convex": "^1.51.0",
     "lucide-react": "^0.563.0",
     "next": "^16.1.6",

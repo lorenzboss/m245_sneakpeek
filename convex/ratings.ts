@@ -1,3 +1,4 @@
+import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
@@ -16,17 +17,12 @@ export const addRating = mutation({
   },
   returns: v.id("ratings"),
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
       throw new Error("Not authenticated");
     }
 
-    // Get the user document from the database
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_userId", (q) => q.eq("userId", identity.subject))
-      .first();
-
+    const user = await ctx.db.get("users", userId);
     if (!user) {
       throw new Error("User not found in database");
     }
@@ -138,16 +134,12 @@ export const getMyRatingForSneaker = query({
     sneakerId: v.id("sneakers"),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
       return null;
     }
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_userId", (q) => q.eq("userId", identity.subject))
-      .first();
-
+    const user = await ctx.db.get("users", userId);
     if (!user) {
       return null;
     }
@@ -190,16 +182,12 @@ export const updateRating = mutation({
   },
   returns: v.id("ratings"),
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
       throw new Error("Not authenticated");
     }
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_userId", (q) => q.eq("userId", identity.subject))
-      .first();
-
+    const user = await ctx.db.get("users", userId);
     if (!user) {
       throw new Error("User not found in database");
     }
@@ -270,17 +258,12 @@ export const getMyRatings = query({
     }),
   ),
   handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
       return [];
     }
 
-    // Get the user document to use their _id
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_userId", (q) => q.eq("userId", identity.subject))
-      .first();
-
+    const user = await ctx.db.get("users", userId);
     if (!user) {
       return [];
     }
@@ -304,16 +287,12 @@ export const deleteRating = mutation({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
       throw new Error("Not authenticated");
     }
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_userId", (q) => q.eq("userId", identity.subject))
-      .first();
-
+    const user = await ctx.db.get("users", userId);
     if (!user) {
       throw new Error("User not found");
     }
