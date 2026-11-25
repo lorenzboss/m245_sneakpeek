@@ -20,5 +20,7 @@ export default convexAuthNextjsProxy(async (request, { isAuthenticated }) => {
 });
 
 export const config = {
-  matcher: ["/((?!auth(?:/|$)|_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    "/((?!auth(?:/|$)|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpe?g|gif|webp|avif|woff2?|ttf|otf|eot)$).*)",
+  ],
 };
